@@ -33,10 +33,6 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=El+Messiri:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- مكتبة GSAP + ScrollTrigger لتحريكات القص التفاعلي المرتبطة بالتمرير (قسم استكشفها) -->
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-
     <!-- تكامل مكتبة Supabase الرسمية لقاعدة البيانات السحابية الحية (لوحة التحكم والمحتوى الديناميكي) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -150,23 +146,14 @@
         .texture-panel::before {
             content: '';
             position: absolute;
-            inset: -10%;
+            inset: 0;
             background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.9) 0, rgba(255,255,255,0.9) 1px, transparent 1px, transparent 26px);
-            background-position: var(--tex-x, 0px) var(--tex-y, 0px);
             opacity: 0.04;
             pointer-events: none;
         }
         .texture-panel > * {
             position: relative;
             z-index: 1;
-        }
-        /* حاوية إخفاء (Mask) لتحريك العناوين الرئيسية كستارة تنزلق للأعلى عند تركيب البلوكات */
-        .reveal-mask {
-            display: block;
-            overflow: hidden;
-        }
-        .reveal-line {
-            display: block;
         }
         /* أيقونة نقطية مخصصة بلون ذهبي غير لامع لقائمة الأهداف الاستراتيجية */
         .goal-bullet {
@@ -304,9 +291,9 @@
     </section>
 
     <!-- القسم الأول: استكشفها (الرؤية، الرسالة، الأهداف) -->
-    <section id="explore" class="explore-wrapper py-16 md:py-24 bg-saudi-sky/30 border-t border-gray-100">
+    <section id="explore" class="py-16 md:py-24 bg-saudi-sky/30 border-t border-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="explore-intro scroll-reveal text-center max-w-3xl mx-auto mb-16">
+            <div class="scroll-reveal text-center max-w-3xl mx-auto mb-16">
                 <span class="text-saudi-orange uppercase tracking-wider text-xs font-black block mb-2" lang="ar">استكشفها</span>
                 <span class="text-saudi-orange uppercase tracking-wider text-xs font-black block mb-2" lang="en">Explore It</span>
                 <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-saudi-green mb-4">
@@ -322,12 +309,12 @@
         </div>
 
         <!-- شبكة غير متماثلة (Asymmetric Split 38%/62%) بامتداد كامل خارج حاوية max-w-7xl، بحيث تلامس ألوانها حواف الشاشة مباشرة دون هامش بيج حولها، وبتفاصيل فاخرة (خطوط زخرفية، نقشة خفية) بأسلوب Qomra -->
-        <div class="explore-grid grid grid-cols-1 lg:grid-cols-[38%_62%]" dir="ltr">
+        <div class="scroll-reveal grid grid-cols-1 lg:grid-cols-[38%_62%]" dir="ltr">
 
             <!-- اللوحة اليسرى: الأهداف الاستراتيجية (أخضر) -->
-            <div class="texture-panel left-column-green order-2 lg:order-1 bg-saudi-green text-white flex flex-col justify-center" style="padding: 5% 6%;" dir="rtl">
-                <h3 class="title-accent text-xl sm:text-2xl font-black mb-5 text-white"><span class="reveal-mask"><span class="reveal-line"><span lang="ar">أهدافنا الاستراتيجية</span><span lang="en">Strategic Goals</span></span></span></h3>
-                <ul class="goals-list text-white/90 text-sm">
+            <div class="texture-panel order-2 lg:order-1 bg-saudi-green text-white flex flex-col justify-center" style="padding: 5% 6%;" dir="rtl">
+                <h3 class="title-accent text-xl sm:text-2xl font-black mb-5 text-white"><span lang="ar">أهدافنا الاستراتيجية</span><span lang="en">Strategic Goals</span></h3>
+                <ul class="text-white/90 text-sm">
                     <li class="flex items-start gap-3 pb-4 mb-4 border-b border-white/[0.08] leading-[1.8]">
                         <svg class="goal-bullet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg>
                         <span><span lang="ar">نقل وتوثيق تجارب إنسانية واقعية وموثوقة.</span><span lang="en">Publish authentic, verified personal narratives.</span></span>
@@ -348,16 +335,16 @@
             </div>
 
             <!-- اللوحة اليمنى: الرؤية (برتقالي) أعلى + الرسالة (بنفسجي) أسفل -->
-            <div class="right-column order-1 lg:order-2 grid grid-rows-2" dir="rtl">
-                <div class="texture-panel vision-orange bg-saudi-orange flex flex-col justify-center" style="padding: 5% 6%;">
-                    <h3 class="title-accent text-xl sm:text-2xl font-black mb-4" style="color:#FDFBF7;"><span class="reveal-mask"><span class="reveal-line"><span lang="ar">رؤيتنا</span><span lang="en">Our Vision</span></span></span></h3>
+            <div class="order-1 lg:order-2 grid grid-rows-2" dir="rtl">
+                <div class="texture-panel bg-saudi-orange flex flex-col justify-center" style="padding: 5% 6%;">
+                    <h3 class="title-accent text-xl sm:text-2xl font-black mb-4" style="color:#FDFBF7;"><span lang="ar">رؤيتنا</span><span lang="en">Our Vision</span></h3>
                     <p class="text-sm leading-[1.8]" style="color:#FDFBF7;">
                         <span lang="ar">أن تكون المنصة الإعلامية الرقمية الرائدة في توثيق التجارب الإنسانية للمقيمين والزوار، وتعزيز التواصل الثقافي، وإبراز الصورة الواقعية للمملكة.</span>
                         <span lang="en">To be the premier global digital destination for authentic human experiences, bridging cultures and reflecting daily life in Saudi Arabia through the eyes of its diverse community.</span>
                     </p>
                 </div>
-                <div class="texture-panel mission-purple bg-saudi-purple text-white flex flex-col justify-center" style="padding: 5% 6%;">
-                    <h3 class="title-accent text-xl sm:text-2xl font-black mb-4 text-white"><span class="reveal-mask"><span class="reveal-line"><span lang="ar">رسالتنا</span><span lang="en">Our Mission</span></span></span></h3>
+                <div class="texture-panel bg-saudi-purple text-white flex flex-col justify-center" style="padding: 5% 6%;">
+                    <h3 class="title-accent text-xl sm:text-2xl font-black mb-4 text-white"><span lang="ar">رسالتنا</span><span lang="en">Our Mission</span></h3>
                     <p class="text-white text-sm leading-[1.8]">
                         <span lang="ar">تمكين المقيمين والزوار من نقل تجاربهم الواقعية في المملكة عبر منصة إعلامية مهنية متعددة اللغات، تعزز التواصل الثقافي، وتبرز الصورة الواقعية للمملكة من خلال محتوى موثوق يعكس تنوع المجتمع السعودي.</span>
                         <span lang="en">Constructing cross-cultural understanding by producing and curating high-quality, multilingual media that truthfully highlights Saudi Arabia’s societal harmony, opportunities, and transformation.</span>
@@ -2540,7 +2527,6 @@
 
             initScrollReveal();
             initHeroSlideshow();
-            initExploreScrollStory();
         };
 
         // --- تبديل صور خلفية الواجهة الرئيسية تلقائياً مع تأثير تلاشي متبادل (Crossfade) ---
@@ -2579,68 +2565,6 @@
             }, { threshold: 0.15 });
 
             revealEls.forEach(el => observer.observe(el));
-        }
-
-        // --- سرد تفاعلي مرتبط بالتمرير لقسم "استكشفها": تركيب البلوكات المتصادمة + كشف العناوين + تدرّج الأهداف ---
-        // يُعطَّل بالكامل إن لم تتوفر مكتبة GSAP/ScrollTrigger (مثلاً بسبب فشل تحميل CDN) أو حين يُفضّل المستخدم تقليل الحركة،
-        // بحيث تبقى القيم الافتراضية في CSS/HTML (بدون أي تحويل أو إخفاء أولي) هي الحالة النهائية الصحيحة دوماً
-        function initExploreScrollStory() {
-            const wrapper = document.querySelector('.explore-wrapper');
-            const grid = document.querySelector('.explore-grid');
-            if (!wrapper || !grid) return;
-            if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
-            if (!window.matchMedia('(prefers-reduced-motion: no-preference)').matches) return;
-
-            gsap.registerPlugin(ScrollTrigger);
-
-            const greenPanel = grid.querySelector('.left-column-green');
-            const orangePanel = grid.querySelector('.vision-orange');
-            const purplePanel = grid.querySelector('.mission-purple');
-            const goalItems = grid.querySelectorAll('.goals-list li');
-            const revealLines = grid.querySelectorAll('.reveal-line');
-            const texturePanels = grid.querySelectorAll('.texture-panel');
-            if (!greenPanel || !orangePanel || !purplePanel) return;
-
-            // الحالة الابتدائية: بلاطات معمارية عائمة ومنفصلة بطبقات عمق مختلفة قبل "التصادم"
-            gsap.set(greenPanel, { xPercent: -12, yPercent: 4, opacity: 0 });
-            gsap.set(orangePanel, { yPercent: 45, opacity: 0 });
-            gsap.set(purplePanel, { yPercent: 70, opacity: 0 });
-            gsap.set(revealLines, { yPercent: 110 });
-            gsap.set(goalItems, { x: 30, opacity: 0 });
-
-            const tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: wrapper,
-                    start: 'top top',
-                    end: '+=140%',
-                    scrub: true,
-                    pin: true,
-                    anticipatePin: 1
-                }
-            });
-
-            // تصادم/التحام اللوحات في الشبكة النهائية غير المتماثلة، بسرعات مختلفة قليلاً بين العمود الأخضر والعمود الأيمن
-            tl.to(greenPanel, { xPercent: 0, yPercent: 0, opacity: 1, duration: 1.1, ease: 'power2.out' })
-              .to(orangePanel, { yPercent: 0, opacity: 1, duration: 1, ease: 'power2.out' }, '<0.1')
-              .to(purplePanel, { yPercent: 0, opacity: 1, duration: 1, ease: 'power2.out' }, '<0.15')
-              .to(revealLines, { yPercent: 0, duration: 0.6, ease: 'power3.out', stagger: 0.08 }, '-=0.55')
-              .to(goalItems, { x: 0, opacity: 1, duration: 0.5, stagger: 0.15, ease: 'power2.out' }, '-=0.3');
-
-            // انزياح دقيق (Parallax) للنقشة الهندسية الخفية خلف كل لوحة أثناء التمرير، لإحساس فاخر بالعمق
-            texturePanels.forEach((panel, i) => {
-                const dir = i % 2 === 0 ? 1 : -1;
-                gsap.to(panel, {
-                    '--tex-x': (dir * 18) + 'px',
-                    '--tex-y': (-dir * 18) + 'px',
-                    ease: 'none',
-                    scrollTrigger: {
-                        trigger: wrapper,
-                        start: 'top top',
-                        end: '+=140%',
-                        scrub: true
-                    }
-                });
-            });
         }
 
     </script>
