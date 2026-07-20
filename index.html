@@ -21,7 +21,8 @@
                         'saudi-light': '#FBF9F7'
                     },
                     fontFamily: {
-                        sans: ['Cairo', 'Inter', 'sans-serif']
+                        sans: ['IBM Plex Sans Arabic', 'IBM Plex Sans', 'sans-serif'],
+                        display: ['El Messiri', 'Playfair Display', 'serif']
                     }
                 }
             }
@@ -29,7 +30,7 @@
     </script>
     
     <!-- تحميل خطوط Google Fonts وتنسيقات الأيقونات Font Awesome -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=El+Messiri:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- تكامل مكتبة Supabase الرسمية لقاعدة البيانات السحابية الحية (لوحة التحكم والمحتوى الديناميكي) -->
@@ -83,8 +84,41 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         /* إخفاء عناصر اللغة الانجليزية افتراضياً عند التحميل بالعربية */
-        [lang="en"] {
+        /* ملاحظة مهمة: السلكتور مقيّد بـ body لتفادي تطابقه مع عنصر <html> نفسه؛ فمنذ أن يضبط الجافاسكربت
+           السمة lang="en" على <html> عند التبديل للإنجليزية، أي قاعدة [lang="en"] غير مقيّدة كانت ستُخفي
+           الصفحة بأكملها (bug فعلي كان موجوداً في القالب الأصلي، تم اكتشافه وإصلاحه هنا) */
+        body [lang="en"] {
             display: none;
+        }
+        /* خط العناوين الفاخر ذو التباين العالي (Modern Heritage) لكل العناوين بالموقع */
+        h1, h2, h3, h4 {
+            font-family: 'El Messiri', 'Playfair Display', serif;
+        }
+        /* تباعد الأحرف يُطبّق فقط على النصوص اللاتينية، ويُلغى تماماً بالعربية */
+        [lang="ar"] {
+            letter-spacing: 0 !important;
+        }
+        /* حركة الظهور التدريجي عند التمرير (Scrollytelling)، مع احترام تفضيل تقليل الحركة بالنظام */
+        @media (prefers-reduced-motion: no-preference) {
+            .scroll-reveal {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: opacity 0.8s ease, transform 0.8s ease;
+            }
+            .scroll-reveal.is-visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* حركة "Ken Burns" البطيئة لخلفية الواجهة الرئيسية، بديل مؤقت لخلفية فيديو حقيقية */
+        @media (prefers-reduced-motion: no-preference) {
+            .hero-media-pan {
+                animation: heroKenBurns 22s ease-in-out infinite alternate;
+            }
+        }
+        @keyframes heroKenBurns {
+            from { transform: scale(1) translate(0, 0); }
+            to { transform: scale(1.12) translate(-1.5%, -1.5%); }
         }
     </style>
 </head>
@@ -105,27 +139,24 @@
 
                 <!-- الوسط: الأقسام البرمجية الرئيسية المرتبة أفقياً -->
                 <nav class="hidden lg:flex items-center gap-1 xl:gap-2">
-                    <a href="#hero" class="px-3 py-2 text-xs xl:text-sm font-bold text-saudi-green hover:text-saudi-orange transition-colors">
-                        <span lang="ar">الرئيسية</span><span lang="en">Home</span>
-                    </a>
                     <a href="#explore" class="px-3 py-2 text-xs xl:text-sm font-bold text-saudi-green hover:text-saudi-orange transition-colors">
-                        <span lang="ar">استكشف السعودية</span><span lang="en">Explore</span>
+                        <span lang="ar">استكشفها</span><span lang="en">Explore</span>
                     </a>
-                    <a href="#media-hub" class="px-3 py-2 text-xs xl:text-sm font-bold text-saudi-green hover:text-saudi-orange transition-colors">
-                        <span lang="ar">الوسائط التفاعلية</span><span lang="en">Media Center</span>
+                    <a href="#experiences" class="px-3 py-2 text-xs xl:text-sm font-bold text-saudi-green hover:text-saudi-orange transition-colors">
+                        <span lang="ar">التجارب</span><span lang="en">Experiences</span>
                     </a>
-                    <a href="#digital-guides" class="px-3 py-2 text-xs xl:text-sm font-bold text-saudi-green hover:text-saudi-orange transition-colors">
-                        <span lang="ar">أدلة العيش والعمل</span><span lang="en">Guides</span>
+                    <a href="#guides" class="px-3 py-2 text-xs xl:text-sm font-bold text-saudi-green hover:text-saudi-orange transition-colors">
+                        <span lang="ar">دليلك</span><span lang="en">Your Guide</span>
                     </a>
                     <a href="#ambassadors" class="px-3 py-2 text-xs xl:text-sm font-bold text-saudi-green hover:text-saudi-orange transition-colors">
-                        <span lang="ar" class="bg-saudi-orange/10 px-2 py-1 rounded-lg text-saudi-orange">سفراء المنصة</span>
+                        <span lang="ar" class="bg-saudi-orange/10 px-2 py-1 rounded-lg text-saudi-orange">السفراء</span>
                         <span lang="en" class="bg-saudi-orange/10 px-2 py-1 rounded-lg text-saudi-orange">Ambassadors</span>
                     </a>
-                    <a href="#transformation" class="px-3 py-2 text-xs xl:text-sm font-bold text-saudi-green hover:text-saudi-orange transition-colors">
-                        <span lang="ar">المشاريع الكبرى</span><span lang="en">Transformation</span>
+                    <a href="#projects" class="px-3 py-2 text-xs xl:text-sm font-bold text-saudi-green hover:text-saudi-orange transition-colors">
+                        <span lang="ar">المشاريع</span><span lang="en">Projects</span>
                     </a>
-                    <a href="#about-us" class="px-3 py-2 text-xs xl:text-sm font-bold text-saudi-green hover:text-saudi-orange transition-colors">
-                        <span lang="ar">عن المنصة</span><span lang="en">About us</span>
+                    <a href="#partner-links" class="px-3 py-2 text-xs xl:text-sm font-bold text-saudi-green hover:text-saudi-orange transition-colors">
+                        <span lang="ar">روابط</span><span lang="en">Links</span>
                     </a>
                 </nav>
 
@@ -139,18 +170,25 @@
                         </form>
                     </div>
 
-                    <!-- مغير اللغة الفوري ثنائي الاتجاه -->
-                    <button onclick="toggleLanguage()" class="px-3 py-1.5 border-2 border-saudi-green hover:bg-saudi-green hover:text-white rounded-full text-xs font-bold text-saudi-green transition-all duration-300 shadow-sm flex items-center gap-1">
-                        <i class="fa-solid fa-globe"></i>
-                        <span id="langBtnText">English</span>
-                    </button>
+                    <!-- مبدّل اللغات (AR/EN فعّالتان الآن، UR/FR عنصر بصري يوضح خطة التوسع اللغوي مستقبلاً) -->
+                    <div class="flex items-center gap-1 border-2 border-saudi-green rounded-full p-1 shadow-sm" role="group" aria-label="Language switcher">
+                        <button id="langPill-ar" onclick="setActiveLanguagePill('ar')" class="w-8 h-6 rounded-full text-[10px] font-black transition-all duration-300 bg-saudi-green text-white">AR</button>
+                        <button id="langPill-en" onclick="setActiveLanguagePill('en')" class="w-8 h-6 rounded-full text-[10px] font-black transition-all duration-300 text-saudi-green hover:bg-saudi-green/10">EN</button>
+                        <button onclick="handleComingSoonLanguage('اردو')" class="w-8 h-6 rounded-full text-[10px] font-black text-saudi-green/40 hover:bg-saudi-green/10 transition-all duration-300" title="قريباً | Coming soon">UR</button>
+                        <button onclick="handleComingSoonLanguage('Français')" class="w-8 h-6 rounded-full text-[10px] font-black text-saudi-green/40 hover:bg-saudi-green/10 transition-all duration-300" title="قريباً | Coming soon">FR</button>
+                    </div>
 
                     <!-- بوابة تسجيل دخول المستخدمين -->
                     <button onclick="openPortalModal()" class="px-4 py-2 bg-saudi-green hover:bg-saudi-orange text-white text-xs font-bold rounded-full transition-all duration-300 shadow-md">
                         <span lang="ar"><i class="fa-solid fa-arrow-right-to-bracket ml-1"></i> بوابتي</span>
                         <span lang="en"><i class="fa-solid fa-arrow-right-to-bracket mr-1"></i> Portal</span>
                     </button>
-                    
+
+                    <!-- زر التسجيل: عنصر بصري يوضح إمكانية إنشاء الحسابات لاحقاً عند تطوير المنصة بالكامل -->
+                    <button onclick="handleApplyNowClick()" class="px-4 py-2 bg-saudi-orange hover:bg-saudi-green text-white text-xs font-bold rounded-full transition-all duration-300 shadow-md">
+                        <span lang="ar">سجل الآن</span><span lang="en">Apply Now</span>
+                    </button>
+
                     <!-- زر القائمة للهواتف المحمولة -->
                     <button onclick="toggleMobileMenu()" class="lg:hidden text-saudi-green text-xl"><i class="fa-solid fa-bars"></i></button>
                 </div>
@@ -160,18 +198,19 @@
 
         <!-- القائمة الجانبية المنسدلة للهواتف الذكية -->
         <div id="mobileMenu" class="hidden lg:hidden bg-white border-t border-gray-100 p-4 space-y-2 text-right">
-            <a href="#hero" onclick="toggleMobileMenu()" class="block py-2 text-sm font-bold text-saudi-green border-b border-gray-50"><span lang="ar">الرئيسية</span><span lang="en">Home</span></a>
-            <a href="#explore" onclick="toggleMobileMenu()" class="block py-2 text-sm font-bold text-saudi-green border-b border-gray-50"><span lang="ar">استكشف السعودية</span><span lang="en">Explore</span></a>
-            <a href="#media-hub" onclick="toggleMobileMenu()" class="block py-2 text-sm font-bold text-saudi-green border-b border-gray-50"><span lang="ar">الوسائط التفاعلية</span><span lang="en">Media Hub</span></a>
-            <a href="#digital-guides" onclick="toggleMobileMenu()" class="block py-2 text-sm font-bold text-saudi-green border-b border-gray-50"><span lang="ar">أدلة العيش والعمل</span><span lang="en">Guides</span></a>
-            <a href="#ambassadors" onclick="toggleMobileMenu()" class="block py-2 text-sm font-bold text-saudi-green border-b border-gray-50"><span lang="ar" class="text-saudi-orange">سفراء المنصة</span><span lang="en" class="text-saudi-orange">Ambassadors</span></a>
-            <a href="#transformation" onclick="toggleMobileMenu()" class="block py-2 text-sm font-bold text-saudi-green border-b border-gray-50"><span lang="ar">مشاريع التحول</span><span lang="en">Transformation</span></a>
-            <a href="#about-us" onclick="toggleMobileMenu()" class="block py-2 text-sm font-bold text-saudi-green"><span lang="ar">عن المنصة</span><span lang="en">About us</span></a>
+            <a href="#explore" onclick="toggleMobileMenu()" class="block py-2 text-sm font-bold text-saudi-green border-b border-gray-50"><span lang="ar">استكشفها</span><span lang="en">Explore</span></a>
+            <a href="#experiences" onclick="toggleMobileMenu()" class="block py-2 text-sm font-bold text-saudi-green border-b border-gray-50"><span lang="ar">التجارب</span><span lang="en">Experiences</span></a>
+            <a href="#guides" onclick="toggleMobileMenu()" class="block py-2 text-sm font-bold text-saudi-green border-b border-gray-50"><span lang="ar">دليلك</span><span lang="en">Your Guide</span></a>
+            <a href="#ambassadors" onclick="toggleMobileMenu()" class="block py-2 text-sm font-bold text-saudi-green border-b border-gray-50"><span lang="ar" class="text-saudi-orange">السفراء</span><span lang="en" class="text-saudi-orange">Ambassadors</span></a>
+            <a href="#projects" onclick="toggleMobileMenu()" class="block py-2 text-sm font-bold text-saudi-green border-b border-gray-50"><span lang="ar">المشاريع</span><span lang="en">Projects</span></a>
+            <a href="#partner-links" onclick="toggleMobileMenu()" class="block py-2 text-sm font-bold text-saudi-green"><span lang="ar">روابط</span><span lang="en">Links</span></a>
         </div>
     </header>
 
-    <!-- قسم الواجهة والترحيب الرئيسي (Hero Section) مع الباترن التراثي الفاخر -->
-    <section id="hero" class="hero-pattern-bg py-20 md:py-32 relative overflow-hidden">
+    <!-- قسم الواجهة والترحيب الرئيسي (Hero Section): خلفية بصرية متحركة (Ken Burns) بديلة لفيديو الخلفية المطلوب -->
+    <section id="hero" class="py-20 md:py-32 relative overflow-hidden">
+        <img src="assets/experiences/alula.jpeg" alt="" aria-hidden="true" class="hero-media-pan absolute inset-0 w-full h-full object-cover z-0">
+        <div class="absolute inset-0 bg-gradient-to-b from-saudi-light/95 via-saudi-light/90 to-saudi-cream/75 z-[1]"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
             <span class="inline-block bg-saudi-orange/10 text-saudi-orange text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full mb-4 animate-bounce">
                 <span lang="ar">صوت حقيقي من مجتمعنا الإنساني العالمي</span>
@@ -205,15 +244,15 @@
         </div>
     </section>
 
-    <!-- القسم الأول: ابدأ رحلتك التفاعلية -->
+    <!-- القسم الأول: استكشفها (الرؤية، الرسالة، الأهداف) -->
     <section id="explore" class="py-16 md:py-24 bg-white border-t border-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <span class="text-saudi-orange uppercase tracking-wider text-xs font-black block mb-2" lang="ar">ابدأ رحلتك</span>
-                <span class="text-saudi-orange uppercase tracking-wider text-xs font-black block mb-2" lang="en">Start Your Journey</span>
+            <div class="scroll-reveal text-center max-w-3xl mx-auto mb-16">
+                <span class="text-saudi-orange uppercase tracking-wider text-xs font-black block mb-2" lang="ar">استكشفها</span>
+                <span class="text-saudi-orange uppercase tracking-wider text-xs font-black block mb-2" lang="en">Explore It</span>
                 <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-saudi-green mb-4">
-                    <span lang="ar">اكتشف المملكة بمنظور مختلف وجديد</span>
-                    <span lang="en">See the Kingdom from a New Perspective</span>
+                    <span lang="ar">من نحن ولماذا بنينا هذه المنصة</span>
+                    <span lang="en">Who We Are, and Why This Platform Exists</span>
                 </h2>
                 <div class="w-20 h-1 bg-saudi-orange mx-auto mb-6"></div>
                 <p class="text-gray-600 text-xs sm:text-sm font-medium">
@@ -222,79 +261,38 @@
                 </p>
             </div>
 
-            <!-- شبكة عرض البطاقات الأربعة الرئيسية للمحتوى -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                
-                <!-- البطاقة 1: القصص السردية -->
-                <div class="bg-saudi-light hover:bg-saudi-cream/20 p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 text-right flex flex-col justify-between group">
-                    <div>
-                        <div class="w-12 h-12 rounded-2xl bg-saudi-green/10 flex items-center justify-center text-saudi-green text-xl mb-4 group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-book-open"></i>
-                        </div>
-                        <h3 class="text-base font-bold text-saudi-green mb-2"><span lang="ar">📖 قصص وتجارب</span><span lang="en">📖 Written Stories</span></h3>
-                        <p class="text-gray-500 text-[11px] sm:text-xs leading-relaxed">
-                            <span lang="ar">تجارب إنسانية حقيقية يرويها أشخاص من مختلف الجنسيات عن الحياة اليومية، التراث العريق، والمذاقات المحلية المميزة.</span>
-                            <span lang="en">Immersive, long-form written journals of discovery, culinary journeys, and deep-rooted heritage.</span>
-                        </p>
-                    </div>
-                    <a href="#media-hub" onclick="switchMediaTab('stories')" class="text-xs font-bold text-saudi-orange group-hover:text-saudi-green mt-4 flex items-center gap-1 self-start">
-                        <span lang="ar">تصفح القصص <i class="fa-solid fa-arrow-left"></i></span>
-                        <span lang="en">Browse <i class="fa-solid fa-arrow-right"></i></span>
-                    </a>
+            <div class="scroll-reveal grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <!-- الرؤية -->
+                <div class="bg-saudi-light p-8 rounded-3xl border border-gray-100 text-right">
+                    <div class="w-12 h-12 rounded-2xl bg-saudi-green/10 text-saudi-green flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-eye"></i></div>
+                    <h3 class="text-lg font-bold text-saudi-green mb-3"><span lang="ar">رؤية المنصة | Vision</span><span lang="en">Our Vision</span></h3>
+                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed">
+                        <span lang="ar">أن نكون المنصة المرجعية والرقمية الأولى للتجارب الإنسانية التفاعلية الصادقة، لنقل تفاصيل وثراء الثقافة والمعيشة في المملكة العربية السعودية بكل مصداقية ومحبة إلى مختلف شعوب العالم.</span>
+                        <span lang="en">To be the premier global digital destination for authentic human experiences, bridging cultures and reflecting daily life in Saudi Arabia through the eyes of its diverse community.</span>
+                    </p>
                 </div>
 
-                <!-- البطاقة 2: الفيديوهات المرئية -->
-                <div class="bg-saudi-light hover:bg-saudi-cream/20 p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 text-right flex flex-col justify-between group">
-                    <div>
-                        <div class="w-12 h-12 rounded-2xl bg-saudi-purple/10 flex items-center justify-center text-saudi-purple text-xl mb-4 group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-video"></i>
-                        </div>
-                        <h3 class="text-base font-bold text-saudi-green mb-2"><span lang="ar">🎥 فيديوهات مرئية</span><span lang="en">🎥 Visual Episodes</span></h3>
-                        <p class="text-gray-500 text-[11px] sm:text-xs leading-relaxed">
-                            <span lang="ar">شاهد المملكة والمدن النابضة بالحياة كما عاشها زوارها ومقيموها في إنتاجات سينمائية مبهرة وعالية الدقة.</span>
-                            <span lang="en">High-definition episodic cinematic videos capturing landscapes, modern lifestyle, and heartfelt hospitality.</span>
-                        </p>
-                    </div>
-                    <a href="#media-hub" onclick="switchMediaTab('videos')" class="text-xs font-bold text-saudi-orange group-hover:text-saudi-green mt-4 flex items-center gap-1 self-start">
-                        <span lang="ar">شاهد الحلقات <i class="fa-solid fa-arrow-left"></i></span>
-                        <span lang="en">Watch Episodes <i class="fa-solid fa-arrow-right"></i></span>
-                    </a>
+                <!-- الرسالة -->
+                <div class="bg-saudi-light p-8 rounded-3xl border border-gray-100 text-right">
+                    <div class="w-12 h-12 rounded-2xl bg-saudi-purple/10 text-saudi-purple flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-paper-plane"></i></div>
+                    <h3 class="text-lg font-bold text-saudi-green mb-3"><span lang="ar">رسالة المنصة | Mission</span><span lang="en">Our Mission</span></h3>
+                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed">
+                        <span lang="ar">بناء وتعميق الفهم والتقارب الثقافي والتعايش السلمي عبر إنتاج وإتاحة محتوى رقمي تفاعلي، وموثوق، ومتعدد اللغات يسلط الضوء على الفرص، والتطور الحضاري، والترابط الأسري والمجتمعي.</span>
+                        <span lang="en">Constructing cross-cultural understanding by producing and curating high-quality, multilingual media that truthfully highlights Saudi Arabia’s societal harmony, opportunities, and transformation.</span>
+                    </p>
                 </div>
 
-                <!-- البطاقة 3: البودكاست المسموع -->
-                <div class="bg-saudi-light hover:bg-saudi-cream/20 p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 text-right flex flex-col justify-between group">
-                    <div>
-                        <div class="w-12 h-12 rounded-2xl bg-saudi-blue/10 flex items-center justify-center text-saudi-blue text-xl mb-4 group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-microphone-lines"></i>
-                        </div>
-                        <h3 class="text-base font-bold text-saudi-green mb-2"><span lang="ar">🎧 بودكاست مسموع</span><span lang="en">🎧 Audio Podcasts</span></h3>
-                        <p class="text-gray-500 text-[11px] sm:text-xs leading-relaxed">
-                            <span lang="ar">حوارات دافئة وملهمة تناقش نصائح التكيف، ريادة الأعمال، وبناء الصداقات داخل المجتمع بصوت أصحابها.</span>
-                            <span lang="en">Intimate audio conversations sharing strategies for adaptation, professional growth, and living in Saudi.</span>
-                        </p>
-                    </div>
-                    <a href="#media-hub" onclick="switchMediaTab('podcasts')" class="text-xs font-bold text-saudi-orange group-hover:text-saudi-green mt-4 flex items-center gap-1 self-start">
-                        <span lang="ar">استمع الآن <i class="fa-solid fa-arrow-left"></i></span>
-                        <span lang="en">Listen Now <i class="fa-solid fa-arrow-right"></i></span>
-                    </a>
-                </div>
-
-                <!-- البطاقة 4: الأدلة والإنفوجرافيك -->
-                <div class="bg-saudi-light hover:bg-saudi-cream/20 p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 text-right flex flex-col justify-between group">
-                    <div>
-                        <div class="w-12 h-12 rounded-2xl bg-saudi-orange/10 flex items-center justify-center text-saudi-orange text-xl mb-4 group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-circle-info"></i>
-                        </div>
-                        <h3 class="text-base font-bold text-saudi-green mb-2"><span lang="ar">📊 إنفوجرافيك وأدلة</span><span lang="en">📊 Visual Guides</span></h3>
-                        <p class="text-gray-500 text-[11px] sm:text-xs leading-relaxed">
-                            <span lang="ar">معلومات وأدلة بصرية مبسطة، خرائط تفاعلية، ونصائح سريعة لتسهيل تفاصيل معيشتك وتنقلك في المملكة.</span>
-                            <span lang="en">Beautifully designed visual data, maps, and bite-sized navigation steps to help you thrive in the Kingdom.</span>
-                        </p>
-                    </div>
-                    <a href="#media-hub" onclick="switchMediaTab('infographics')" class="text-xs font-bold text-saudi-orange group-hover:text-saudi-green mt-4 flex items-center gap-1 self-start">
-                        <span lang="ar">تصفح الأدلة <i class="fa-solid fa-arrow-left"></i></span>
-                        <span lang="en">View Guides <i class="fa-solid fa-arrow-right"></i></span>
-                    </a>
+                <!-- الأهداف -->
+                <div class="bg-saudi-light p-8 rounded-3xl border border-gray-100 text-right">
+                    <div class="w-12 h-12 rounded-2xl bg-saudi-blue/10 text-saudi-blue flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-bullseye"></i></div>
+                    <h3 class="text-lg font-bold text-saudi-green mb-3"><span lang="ar">أهدافنا الاستراتيجية | Objectives</span><span lang="en">Strategic Goals</span></h3>
+                    <ul class="text-gray-500 text-xs sm:text-sm leading-relaxed space-y-2">
+                        <li><span lang="ar">✓ نقل وتوثيق تجارب إنسانية واقعية وموثوقة.</span><span lang="en">✓ Publish authentic, verified personal narratives.</span></li>
+                        <li><span lang="ar">✓ تعزيز التواصل والحوار الثقافي بين الشعوب.</span><span lang="en">✓ Promote active international cultural exchange.</span></li>
+                        <li><span lang="ar">✓ تسليط الضوء على نهضة المشاريع الوطنية ورؤية 2030.</span><span lang="en">✓ Highlight the massive socio-economic transformation.</span></li>
+                        <li><span lang="ar">✓ تسهيل وصول الزوار والمقيمين للخدمات الرسمية.</span><span lang="en">✓ Seamlessly connect users to official portals.</span></li>
+                    </ul>
                 </div>
 
             </div>
@@ -302,10 +300,10 @@
     </section>
 
     <!-- القسم الثاني: شاهد التجارب والوسائط التفاعلية والقصص الستة -->
-    <section id="media-hub" class="py-16 md:py-24 bg-saudi-light/60">
+    <section id="experiences" class="py-16 md:py-24 bg-saudi-light/60">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            <div class="flex flex-col md:flex-row items-center justify-between mb-12 gap-4">
+            <div class="scroll-reveal flex flex-col md:flex-row items-center justify-between mb-12 gap-4">
                 <div class="text-right">
                     <span class="text-saudi-purple text-xs font-black uppercase tracking-wider block mb-1" lang="ar">أحدث الإضافات والإنتاجات</span>
                     <span class="text-saudi-purple text-xs font-black uppercase tracking-wider block mb-1" lang="en">Newly Added Stories & Production</span>
@@ -325,9 +323,6 @@
                     </button>
                     <button onclick="switchMediaTab('podcasts')" id="tabBtn-podcasts" class="px-5 py-2 text-xs font-bold rounded-xl transition-all duration-300 text-gray-500 hover:text-saudi-green">
                         <i class="fa-solid fa-microphone ml-1"></i> <span lang="ar">البودكاست</span><span lang="en">Podcasts</span>
-                    </button>
-                    <button onclick="switchMediaTab('infographics')" id="tabBtn-infographics" class="px-5 py-2 text-xs font-bold rounded-xl transition-all duration-300 text-gray-500 hover:text-saudi-green">
-                        <i class="fa-solid fa-chart-pie ml-1"></i> <span lang="ar">الإنفوجرافيك</span><span lang="en">Infographics</span>
                     </button>
                     <button onclick="switchMediaTab('social')" id="tabBtn-social" class="px-5 py-2 text-xs font-bold rounded-xl transition-all duration-300 text-gray-500 hover:text-saudi-green">
                         <i class="fa-solid fa-share-nodes ml-1"></i> <span lang="ar">مجتمعنا الاجتماعي</span><span lang="en">Social</span>
@@ -524,6 +519,8 @@
 
             <!-- محتوى تبويب 3: بودكاست السعودية المسموع -->
             <div id="tabContent-podcasts" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- البودكاستات المضافة حياً عبر لوحة تحكم المدير وقاعدة بيانات Supabase تظهر هنا أولاً -->
+                <div id="dynamicPodcastsContainer" class="contents"></div>
                 <!-- بودكاست 1 -->
                 <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all text-right flex flex-col md:flex-row gap-6">
                     <div class="w-full md:w-32 h-32 bg-saudi-green text-saudi-cream rounded-2xl flex flex-col items-center justify-center shrink-0">
@@ -577,73 +574,7 @@
                 </div>
             </div>
 
-            <!-- محتوى تبويب 4: الإنفوجرافيك والدعم البصري المريح -->
-            <div id="tabContent-infographics" class="hidden grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- إنفو 1 -->
-                <div class="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all text-right">
-                    <div class="h-56 bg-saudi-cream/20 flex items-center justify-center p-6 border-b border-gray-50">
-                        <div class="text-center">
-                            <i class="fa-solid fa-passport text-4xl text-saudi-orange mb-3"></i>
-                            <h4 class="font-bold text-saudi-green text-xs mb-1">دليل الزائر السريع | Visitor Guide</h4>
-                            <p class="text-[10px] text-gray-400">تأشيرة الدخول، الإقامة، التنقل الآمن</p>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <p class="text-xs text-gray-500 leading-relaxed mb-4">
-                            <span lang="ar">إنفوجرافيك تفاعلي مبسط يعرض الخطوات الثلاث لتفعيل هويتك الرقمية الرقمية والاندماج بالمجتمع بكل سلاسة ويسر.</span>
-                            <span lang="en">Visual maps representing quick custom instructions for tourists and expatriates entering the country.</span>
-                        </p>
-                        <a href="https://visa.mofa.gov.sa" target="_blank" class="w-full py-2.5 bg-saudi-green hover:bg-saudi-orange text-white text-xs font-bold rounded-xl transition-all-300 block text-center">
-                            <span lang="ar">تنزيل الدليل (PDF) <i class="fa-solid fa-download mr-1"></i></span>
-                            <span lang="en">Download PDF <i class="fa-solid fa-download ml-1"></i></span>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- إنفو 2 -->
-                <div class="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all text-right">
-                    <div class="h-56 bg-saudi-cream/20 flex items-center justify-center p-6 border-b border-gray-50">
-                        <div class="text-center">
-                            <i class="fa-solid fa-map-location-dot text-4xl text-saudi-purple mb-3"></i>
-                            <h4 class="font-bold text-saudi-green text-xs mb-1">خريطة تجارب لا تفوت | Experience Map</h4>
-                            <p class="text-[10px] text-gray-400">العلا، عسير، الأحساء، الدرعية</p>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <p class="text-xs text-gray-500 leading-relaxed mb-4">
-                            <span lang="ar">دليل جغرافي منسق يربط بين الوجهات السياحية والتقاليد المحلية ووسائل المواصلات الحكومية الفائقة مثل قطار الحرمين.</span>
-                            <span lang="en">Explore cultural wonders using our meticulously visual roadmap connecting major Saudi heritage landscapes.</span>
-                        </p>
-                        <a href="https://www.visitsaudi.com" target="_blank" class="w-full py-2.5 bg-saudi-green hover:bg-saudi-orange text-white text-xs font-bold rounded-xl transition-all-300 block text-center">
-                            <span lang="ar">عرض الخريطة السياحية <i class="fa-solid fa-map mr-1"></i></span>
-                            <span lang="en">View Map on Visit Saudi <i class="fa-solid fa-map ml-1"></i></span>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- إنفو 3 -->
-                <div class="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all text-right">
-                    <div class="h-56 bg-saudi-cream/20 flex items-center justify-center p-6 border-b border-gray-50">
-                        <div class="text-center">
-                            <i class="fa-solid fa-users-viewfinder text-4xl text-saudi-blue mb-3"></i>
-                            <h4 class="font-bold text-saudi-green text-xs mb-1">أرقام التنوع الثقافي | Demographics</h4>
-                            <p class="text-[10px] text-gray-400">التعايش، الجنسيات، بيئة العمل</p>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <p class="text-xs text-gray-500 leading-relaxed mb-4">
-                            <span lang="ar">بيانات إحصائية رسومية تبرز مستويات الأمان المرتفعة، تنوع المقيمين، وفرص العمل الجذابة برؤية 2030 الكبرى.</span>
-                            <span lang="en">Verify visual charts showing highest safety index, investment ease, and multicultural community indicators.</span>
-                        </p>
-                        <a href="https://qiwa.sa" target="_blank" class="w-full py-2.5 bg-saudi-green hover:bg-saudi-orange text-white text-xs font-bold rounded-xl transition-all-300 block text-center">
-                            <span lang="ar">عرض البيانات الموثقة <i class="fa-solid fa-chart-line mr-1"></i></span>
-                            <span lang="en">View Qiwa Statistics <i class="fa-solid fa-chart-line ml-1"></i></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- محتوى تبويب 5: منشورات المجتمع من تويتر وانستغرام (مصدرها لوحة تحكم المدير الحية) -->
+            <!-- محتوى تبويب 4: منشورات المجتمع من تويتر وانستغرام (مصدرها لوحة تحكم المدير الحية) -->
             <div id="tabContent-social" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div id="dynamicSocialContainer" class="contents"></div>
                 <div id="socialEmptyState" class="hidden col-span-full text-center py-16 text-gray-400">
@@ -655,154 +586,29 @@
         </div>
     </section>
 
-    <!-- القسم الثالث: دليلك الشامل والمتكامل للعيش والعمل (مقتبس بالكامل) -->
-    <section id="digital-guides" class="py-16 md:py-24 bg-white">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div class="text-center mb-16">
+    <!-- القسم الثالث: دليلك - أربعة أدلة عملية بشكل بطاقات، يفتح كل منها صورة الإنفوجرافيك كاملة عند الضغط -->
+    <section id="guides" class="py-16 md:py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <div class="scroll-reveal text-center max-w-3xl mx-auto mb-16">
                 <span class="text-saudi-orange uppercase tracking-wider text-xs font-black block mb-2" lang="ar">دليلك بالسعودية</span>
-                <span class="text-saudi-orange uppercase tracking-wider text-xs font-black block mb-2" lang="en">Living & Thriving Guide</span>
-                
+                <span class="text-saudi-orange uppercase tracking-wider text-xs font-black block mb-2" lang="en">Your Guide to Saudi Arabia</span>
+
                 <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-saudi-green mb-4">
                     <span lang="ar">كيف تبدأ وتزدهر في وطنك الجديد؟</span>
                     <span lang="en">Your Blueprint for Success in Saudi Arabia</span>
                 </h2>
                 <div class="w-20 h-1 bg-saudi-orange mx-auto mb-6"></div>
                 <p class="text-gray-600 text-xs sm:text-sm font-medium">
-                    <span lang="ar">خطوات عملية، وموثوقة، تم إعدادها بالتعاون مع جهات رسمية ومقيمين أصحاب خبرة لتسهيل استقرارك السريع، وتطوير مسارك المهني والاجتماعي.</span>
-                    <span lang="en">Step-by-step practical, verified blueprints to smooth your settlement and accelerate your lifestyle and business goals.</span>
+                    <span lang="ar">أربعة أدلة عملية جاهزة، اضغط على أي بطاقة لعرض الدليل كاملاً بحجم واضح وقابل للقراءة.</span>
+                    <span lang="en">Four ready-made practical guides — tap any card to view the full guide at a clear, readable size.</span>
                 </p>
             </div>
 
-            <!-- أكورديون الفصول الثلاثة للدليل -->
-            <div class="space-y-4 text-right">
-                
-                <!-- الفصل الأول -->
-                <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden transition-all duration-300">
-                    <button onclick="toggleAccordion(1)" class="w-full px-6 py-5 flex justify-between items-center text-right font-bold text-saudi-green hover:bg-saudi-cream/10 transition-colors">
-                        <div>
-                            <span class="text-xs text-saudi-orange block mb-1">الفصل الأول | Chapter 1</span>
-                            <span class="text-base sm:text-lg">
-                                <span lang="ar">البدايات السلسة والحلول الرقمية: الإقامة، السكن والمواصلات</span>
-                                <span lang="en">Smooth Relocation: Digital Infrastructure, Housing & Transport</span>
-                            </span>
-                        </div>
-                        <i id="accordionIcon-1" class="fa-solid fa-chevron-down text-saudi-green mr-4 transition-transform duration-300"></i>
-                    </button>
-                    
-                    <div id="accordionContent-1" class="hidden border-t border-gray-50 p-6 md:p-8 space-y-6 text-xs sm:text-sm text-gray-600 leading-relaxed bg-saudi-light/50">
-                        <p>
-                            <span lang="ar">تتمتع المملكة العربية السعودية بواحدة من أكثر البنى التحتية الرقمية تقدماً في العالم، مما يسهل لك تنظيم كافة تفاصيل معيشتك وتنقلك بسرعة وأمان:</span>
-                            <span lang="en">Saudi Arabia boasts one of the most advanced digital environments, facilitating fast and fully integrated life organization.</span>
-                        </p>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-                            <div class="bg-white p-4 rounded-2xl border border-gray-100">
-                                <h4 class="font-bold text-saudi-green text-xs mb-1">منصة أبشر الموحدة | Absher</h4>
-                                <p class="text-[11px] text-gray-500">
-                                    <span lang="ar">البوابة الرسمية لتوثيق الهوية، تجديد رخص الإقامة، وإدارة الوثائق الحكومية للأفراد.</span>
-                                    <span lang="en">The official unified hub to manage residency statuses, verify identities, and official documents.</span>
-                                </p>
-                                <a href="https://www.absher.sa" target="_blank" class="text-[10px] font-bold text-saudi-orange mt-2 block hover:underline">absher.sa <i class="fa-solid fa-external-link text-[8px] mr-0.5"></i></a>
-                            </div>
-                            <div class="bg-white p-4 rounded-2xl border border-gray-100">
-                                <h4 class="font-bold text-saudi-green text-xs mb-1">توكلنا خدمات | Tawakkalna</h4>
-                                <p class="text-[11px] text-gray-500">
-                                    <span lang="ar">المحفظة الرقمية الرسمية لاستعراض الهوية الرقمية، التأمين الصحي، وتفاصيل المدارس لأبنائك.</span>
-                                    <span lang="en">Secure virtual wallet detailing health insurance, family status, and digital identity papers.</span>
-                                </p>
-                                <a href="https://tawakkalna.sdaia.gov.sa" target="_blank" class="text-[10px] font-bold text-saudi-orange mt-2 block hover:underline">tawakkalna.sa <i class="fa-solid fa-external-link text-[8px] mr-0.5"></i></a>
-                            </div>
-                            <div class="bg-white p-4 rounded-2xl border border-gray-100">
-                                <h4 class="font-bold text-saudi-green text-xs mb-1">قطار الحرمين السريع | SAR</h4>
-                                <p class="text-[11px] text-gray-500">
-                                    <span lang="ar">شبكة القطارات السريعة المريحة لربط المدن الكبرى (الرياض، الشرقية، جدة، مكة، المدينة).</span>
-                                    <span lang="en">High-speed, luxurious rail network for smooth regional travel across major economic regions.</span>
-                                </p>
-                                <a href="https://www.sar.com.sa" target="_blank" class="text-[10px] font-bold text-saudi-orange mt-2 block hover:underline">sar.com.sa <i class="fa-solid fa-external-link text-[8px] mr-0.5"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- الفصل الثاني -->
-                <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden transition-all duration-300">
-                    <button onclick="toggleAccordion(2)" class="w-full px-6 py-5 flex justify-between items-center text-right font-bold text-saudi-green hover:bg-saudi-cream/10 transition-colors">
-                        <div>
-                            <span class="text-xs text-saudi-orange block mb-1">الفصل الثاني | Chapter 2</span>
-                            <span class="text-base sm:text-lg">
-                                <span lang="ar">أصول الضيافة والآداب الاجتماعية: المجلس والاندماج</span>
-                                <span lang="en">Cultural Etiquette: Embracing Hospitality, Customs & Connections</span>
-                            </span>
-                        </div>
-                        <i id="accordionIcon-2" class="fa-solid fa-chevron-down text-saudi-green mr-4 transition-transform duration-300"></i>
-                    </button>
-                    
-                    <div id="accordionContent-2" class="hidden border-t border-gray-50 p-6 md:p-8 space-y-6 text-xs sm:text-sm text-gray-600 leading-relaxed bg-saudi-light/50">
-                        <p>
-                            <span lang="ar">المجتمع السعودي مضياف للغاية، وجبل أهله على الترحيب بضيوفهم. فهم بعض التفاصيل الثقافية يبني فوراً جسوراً من الود المتبادل:</span>
-                            <span lang="en">Saudi society is rooted in deep respect and warmth. Familiarizing yourself with minor social guidelines unlocks wonderful friendships.</span>
-                        </p>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="bg-white p-5 rounded-2xl border border-gray-100">
-                                <h4 class="font-bold text-saudi-green text-xs mb-2">أدب المجلس والقهوة السعودية</h4>
-                                <p class="text-[11px] text-gray-500">
-                                    <span lang="ar">عند دعوتك لمنزل سعودي، احرص على تناول القهوة والتمور باليد اليمنى. للإشارة للاكتفاء من القهوة، هز فنجانك الصغير بلطف يميناً ويساراً قبل تسليمه للمضيف.</span>
-                                    <span lang="en">Accept the Arabic Gahwa (coffee) with your right hand. Jiggle your small cup (finjan) to signal that you have had enough.</span>
-                                </p>
-                            </div>
-                            <div class="bg-white p-5 rounded-2xl border border-gray-100">
-                                <h4 class="font-bold text-saudi-green text-xs mb-2">الذوق العام والمناسبات الوطنية</h4>
-                                <p class="text-[11px] text-gray-500">
-                                    <span lang="ar">ارتداء الملابس المحتشمة في الأماكن العامة يعكس احتراماً متبادلاً. شارك ببهجة في احتفالات اليوم الوطني (23 سبتمبر) ويوم التأسيس (22 فبراير) لتشعر بروح الانتماء لهذا البلد الطيب.</span>
-                                    <span lang="en">Modest attire in public is valued. Participate with neighbors in celebrating Saudi National Day to feel at home.</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- الفصل الثالث -->
-                <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden transition-all duration-300">
-                    <button onclick="toggleAccordion(3)" class="w-full px-6 py-5 flex justify-between items-center text-right font-bold text-saudi-green hover:bg-saudi-cream/10 transition-colors">
-                        <div>
-                            <span class="text-xs text-saudi-orange block mb-1">الفصل الثالث | Chapter 3</span>
-                            <span class="text-base sm:text-lg">
-                                <span lang="ar">النمو المهني والفرص الاستثمارية: العمل والتميز في عصر النهضة</span>
-                                <span lang="en">Professional Growth: Thriving in the Vision 2030 Career Era</span>
-                            </span>
-                        </div>
-                        <i id="accordionIcon-3" class="fa-solid fa-chevron-down text-saudi-green mr-4 transition-transform duration-300"></i>
-                    </button>
-                    
-                    <div id="accordionContent-3" class="hidden border-t border-gray-50 p-6 md:p-8 space-y-6 text-xs sm:text-sm text-gray-600 leading-relaxed bg-saudi-light/50">
-                        <p>
-                            <span lang="ar">مع طفرة الاستثمارات والمشاريع الكبرى المتوائمة مع رؤية 2030، تمثل السعودية حالياً بيئة العمل الأسرع نمواً والأجذب للكفاءات العالمية في المنطقة:</span>
-                            <span lang="en">Guided by Vision 2030, Saudi Arabia is currently the fastest-growing investment and career landscape in the region.</span>
-                        </p>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="bg-white p-4 rounded-2xl border border-gray-100">
-                                <h4 class="font-bold text-saudi-green text-xs mb-1">منصة قوى الموحدة | Qiwa Platform</h4>
-                                <p class="text-[11px] text-gray-500">
-                                    <span lang="ar">منصة رقمية موحدة تحت إشراف وزارة الموارد البشرية، تضمن توثيق وإدارة عقود العمل والخدمات العمالية بشفافية تامة وحفظ كامل للحقوق.</span>
-                                    <span lang="en">Familiarize yourself with the Qiwa Platform, the unified system that governs employment relations in the Kingdom.</span>
-                                </p>
-                                <a href="https://qiwa.sa" target="_blank" class="text-[10px] font-bold text-saudi-orange mt-2 block hover:underline">qiwa.sa <i class="fa-solid fa-external-link text-[8px] mr-0.5"></i></a>
-                            </div>
-                            <div class="bg-white p-4 rounded-2xl border border-gray-100">
-                                <h4 class="font-bold text-saudi-green text-xs mb-1">بوابة مقيم الذكية | Muqeem Portal</h4>
-                                <p class="text-[11px] text-gray-500">
-                                    <span lang="ar">تسهل للشركات والمؤسسات تتبع بيانات المقيمين وإصدار وتجديد تأشيرات الخروج والعودة والإقامات وتصاريح العمل بسرعة فائقة.</span>
-                                    <span lang="en">Track visas and residency statuses using the interactive Muqeem Portal for high-efficiency management.</span>
-                                </p>
-                                <a href="https://muqeem.sa" target="_blank" class="text-[10px] font-bold text-saudi-orange mt-2 block hover:underline">muqeem.sa <i class="fa-solid fa-external-link text-[8px] mr-0.5"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+            <div id="dynamicGuidesContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+            <div id="guidesEmptyState" class="hidden text-center py-16 text-gray-400">
+                <i class="fa-solid fa-book text-3xl mb-3"></i>
+                <p class="text-xs font-bold"><span lang="ar">لا توجد أدلة مضافة بعد.</span><span lang="en">No guides added yet.</span></p>
             </div>
 
         </div>
@@ -812,7 +618,7 @@
     <section id="ambassadors" class="py-16 md:py-24 bg-gradient-to-b from-saudi-light via-white to-saudi-light border-t border-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            <div class="text-center max-w-3xl mx-auto mb-16">
+            <div class="scroll-reveal text-center max-w-3xl mx-auto mb-16">
                 <span class="text-saudi-orange uppercase tracking-wider text-xs font-black block mb-2" lang="ar">تواصل مباشر ومعرفة متبادلة</span>
                 <span class="text-saudi-orange uppercase tracking-wider text-xs font-black block mb-2" lang="en">Direct Connection & Shared Wisdom</span>
                 
@@ -829,88 +635,80 @@
 
             <!-- شبكة عرض بطاقات السفراء الأربعة -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                
-                <!-- السفير 1: كلير مارتن (قطاع الأعمال والاستثمار) -->
-                <div onclick="selectAmbassador(3)" id="ambassadorCard-3" class="ambassador-card cursor-pointer bg-white rounded-3xl p-6 border-2 border-transparent hover:border-saudi-green/40 shadow-sm hover:shadow-lg transition-all duration-300 relative overflow-hidden group">
-                    <div class="absolute top-4 left-4 bg-saudi-purple/10 text-saudi-purple text-[10px] font-bold px-2 py-1 rounded-full">
-                        <span lang="ar">💼 أعمال واستثمار</span><span lang="en">💼 Tech & Business</span>
-                    </div>
-                    <div class="w-20 h-20 rounded-2xl bg-saudi-purple/10 flex items-center justify-center text-saudi-purple text-4xl mb-4 group-hover:scale-105 transition-transform mx-auto">
-                        <i class="fa-solid fa-user-tie"></i>
-                    </div>
-                    <div class="text-center">
-                        <h3 class="text-base font-bold text-saudi-green">كلير مارتن | Claire</h3>
-                        <p class="text-xs text-gray-400 mt-1">فرنسا | France 🇫🇷</p>
-                        <p class="text-[11px] text-gray-500 mt-3 font-medium line-clamp-2">
-                            <span lang="ar">مستشارة ريادة أعمال وتأسيس الشركات بالرياض.</span>
-                            <span lang="en">Tech founder helping expats set up startups in Riyadh.</span>
-                        </p>
-                    </div>
-                    <button class="w-full mt-5 py-2 bg-saudi-purple/10 text-saudi-purple text-xs font-bold rounded-xl group-hover:bg-saudi-purple group-hover:text-white transition-all duration-300">
-                        <span lang="ar">اسأل السفير</span><span lang="en">Ask Claire</span>
-                    </button>
-                </div>
 
-                <!-- السفير 2: أرجون باتيل (قطاع التعليم والبحث العلمي) -->
+                <!-- السفير 1: جون (بن لندن) -->
                 <div onclick="selectAmbassador(1)" id="ambassadorCard-1" class="ambassador-card cursor-pointer bg-white rounded-3xl p-6 border-2 border-transparent hover:border-saudi-green/40 shadow-sm hover:shadow-lg transition-all duration-300 relative overflow-hidden group">
                     <div class="absolute top-4 left-4 bg-saudi-blue/10 text-saudi-blue text-[10px] font-bold px-2 py-1 rounded-full">
-                        <span lang="ar">🎓 التعليم والبحوث</span><span lang="en">🎓 Academy & AI</span>
+                        <span lang="ar">🏠 الحياة اليومية والاندماج</span><span lang="en">🏠 Daily Life &amp; Integration</span>
                     </div>
-                    <div class="w-20 h-20 rounded-2xl bg-saudi-blue/10 flex items-center justify-center text-saudi-blue text-4xl mb-4 group-hover:scale-105 transition-transform mx-auto">
-                        <i class="fa-solid fa-user-graduate"></i>
-                    </div>
+                    <img src="assets/ambassadors/john-london.jpg" alt="جون بن لندن" class="w-20 h-20 rounded-2xl object-cover mb-4 group-hover:scale-105 transition-transform mx-auto">
                     <div class="text-center">
-                        <h3 class="text-base font-bold text-saudi-green">أرجون باتيل | Arjun</h3>
-                        <p class="text-xs text-gray-400 mt-1">الهند | India 🇮🇳</p>
+                        <h3 class="text-base font-bold text-saudi-green">جون (بن لندن) | John</h3>
+                        <p class="text-xs text-gray-400 mt-1">بريطاني | British 🇬🇧</p>
                         <p class="text-[11px] text-gray-500 mt-3 font-medium line-clamp-2">
-                            <span lang="ar">طالب ماجستير وباحث ذكاء اصطناعي بجامعة كاوست.</span>
-                            <span lang="en">Master's student guiding academic relocation.</span>
+                            <span lang="ar">دليلك البريطاني لفهم تفاصيل العيش والاندماج في المجتمع السعودي بكل عفوية وبساطة.</span>
+                            <span lang="en">Your British guide to daily life and effortless integration into Saudi society.</span>
                         </p>
                     </div>
                     <button class="w-full mt-5 py-2 bg-saudi-blue/10 text-saudi-blue text-xs font-bold rounded-xl group-hover:bg-saudi-blue group-hover:text-white transition-all duration-300">
-                        <span lang="ar">اسأل السفير</span><span lang="en">Ask Arjun</span>
+                        <span lang="ar">اسأل السفير</span><span lang="en">Ask John</span>
                     </button>
                 </div>
 
-                <!-- السفير 3: ماريا سانتوس (قطاع الرعاية والاندماج المعيشي) -->
+                <!-- السفير 2: أبو متعب الأمريكي -->
                 <div onclick="selectAmbassador(2)" id="ambassadorCard-2" class="ambassador-card cursor-pointer bg-white rounded-3xl p-6 border-2 border-transparent hover:border-saudi-green/40 shadow-sm hover:shadow-lg transition-all duration-300 relative overflow-hidden group">
-                    <div class="absolute top-4 left-4 bg-saudi-green/10 text-saudi-green text-[10px] font-bold px-2 py-1 rounded-full">
-                        <span lang="ar">🩺 القطاع الصحي والاندماج</span><span lang="en">🩺 Health & Care</span>
+                    <div class="absolute top-4 left-4 bg-saudi-purple/10 text-saudi-purple text-[10px] font-bold px-2 py-1 rounded-full">
+                        <span lang="ar">❤️ الثقافة والانتماء</span><span lang="en">❤️ Culture &amp; Belonging</span>
                     </div>
-                    <div class="w-20 h-20 rounded-2xl bg-saudi-green/10 flex items-center justify-center text-saudi-green text-4xl mb-4 group-hover:scale-105 transition-transform mx-auto">
-                        <i class="fa-solid fa-user-doctor"></i>
-                    </div>
+                    <img src="assets/ambassadors/abu-mutaib-american.jpeg" alt="أبو متعب الأمريكي" class="w-20 h-20 rounded-2xl object-cover mb-4 group-hover:scale-105 transition-transform mx-auto">
                     <div class="text-center">
-                        <h3 class="text-base font-bold text-saudi-green">ماريا سانتوس | Maria</h3>
-                        <p class="text-xs text-gray-400 mt-1">الفلبين | Philippines 🇵🇭</p>
+                        <h3 class="text-base font-bold text-saudi-green">أبو متعب الأمريكي | Abu Mutaib</h3>
+                        <p class="text-xs text-gray-400 mt-1">أمريكي | American 🇺🇸</p>
                         <p class="text-[11px] text-gray-500 mt-3 font-medium line-clamp-2">
-                            <span lang="ar">أخصائية تمريض رعاية صحية أولى بالرياض منذ 8 سنوات.</span>
-                            <span lang="en">ICU Senior Nurse supporting healthcare integration.</span>
+                            <span lang="ar">صوت الخبرة الأمريكية العميقة الذي يجيب الأجانب عن سر التعلق بالسعودية وثقافتها.</span>
+                            <span lang="en">A voice of deep American experience answering why expats fall in love with Saudi culture.</span>
+                        </p>
+                    </div>
+                    <button class="w-full mt-5 py-2 bg-saudi-purple/10 text-saudi-purple text-xs font-bold rounded-xl group-hover:bg-saudi-purple group-hover:text-white transition-all duration-300">
+                        <span lang="ar">اسأل السفير</span><span lang="en">Ask Abu Mutaib</span>
+                    </button>
+                </div>
+
+                <!-- السفير 3: حسن الصيني -->
+                <div onclick="selectAmbassador(3)" id="ambassadorCard-3" class="ambassador-card cursor-pointer bg-white rounded-3xl p-6 border-2 border-transparent hover:border-saudi-green/40 shadow-sm hover:shadow-lg transition-all duration-300 relative overflow-hidden group">
+                    <div class="absolute top-4 left-4 bg-saudi-green/10 text-saudi-green text-[10px] font-bold px-2 py-1 rounded-full">
+                        <span lang="ar">🌏 التناغم الثقافي والفرص</span><span lang="en">🌏 Culture &amp; Opportunity</span>
+                    </div>
+                    <img src="assets/ambassadors/hassan-chinese.jpeg" alt="حسن الصيني" class="w-20 h-20 rounded-2xl object-cover mb-4 group-hover:scale-105 transition-transform mx-auto">
+                    <div class="text-center">
+                        <h3 class="text-base font-bold text-saudi-green">حسن الصيني | Hassan</h3>
+                        <p class="text-xs text-gray-400 mt-1">صيني | Chinese 🇨🇳</p>
+                        <p class="text-[11px] text-gray-500 mt-3 font-medium line-clamp-2">
+                            <span lang="ar">مرجعك الصيني الموثوق لاستكشاف التناغم الثقافي والفرص الواعدة في المملكة من منظور شرقي.</span>
+                            <span lang="en">Your trusted Chinese reference for cultural harmony and promising opportunities, from an Eastern lens.</span>
                         </p>
                     </div>
                     <button class="w-full mt-5 py-2 bg-saudi-green/10 text-saudi-green text-xs font-bold rounded-xl group-hover:bg-saudi-green group-hover:text-white transition-all duration-300">
-                        <span lang="ar">اسأل السفير</span><span lang="en">Ask Maria</span>
+                        <span lang="ar">اسأل السفير</span><span lang="en">Ask Hassan</span>
                     </button>
                 </div>
 
-                <!-- السفير 4: أحمد خان (قطاع الإنشاءات والحياة العائلية) -->
+                <!-- السفير 4: محمد فلود -->
                 <div onclick="selectAmbassador(4)" id="ambassadorCard-4" class="ambassador-card cursor-pointer bg-white rounded-3xl p-6 border-2 border-transparent hover:border-saudi-green/40 shadow-sm hover:shadow-lg transition-all duration-300 relative overflow-hidden group">
                     <div class="absolute top-4 left-4 bg-saudi-orange/10 text-saudi-orange text-[10px] font-bold px-2 py-1 rounded-full">
-                        <span lang="ar">🏗️ الإنشاءات والحياة</span><span lang="en">🏗️ Engineering & Family</span>
+                        <span lang="ar">🌍 المجتمع والحياة اليومية</span><span lang="en">🌍 Community &amp; Daily Life</span>
                     </div>
-                    <div class="w-20 h-20 rounded-2xl bg-saudi-orange/10 flex items-center justify-center text-saudi-orange text-4xl mb-4 group-hover:scale-105 transition-transform mx-auto">
-                        <i class="fa-solid fa-helmet-safety"></i>
-                    </div>
+                    <img src="assets/ambassadors/mohammed-flood.jpeg" alt="محمد فلود" class="w-20 h-20 rounded-2xl object-cover mb-4 group-hover:scale-105 transition-transform mx-auto">
                     <div class="text-center">
-                        <h3 class="text-base font-bold text-saudi-green">أحمد خان | Ahmed</h3>
-                        <p class="text-xs text-gray-400 mt-1">باكستان | Pakistan 🇵🇰</p>
+                        <h3 class="text-base font-bold text-saudi-green">محمد فلود | Mohammed Flood</h3>
+                        <p class="text-xs text-gray-400 mt-1">تشادي، مواليد السعودية | Chadian, born in Saudi 🇹🇩</p>
                         <p class="text-[11px] text-gray-500 mt-3 font-medium line-clamp-2">
-                            <span lang="ar">مهندس إنشائي أول وعائلته مستقرة بالشرقية.</span>
-                            <span lang="en">Structural engineer sharing family lifestyle tips.</span>
+                            <span lang="ar">ابن المملكة وجسرها الإفريقي، يجيب الأجانب بروح مرحة عن تفاصيل اليوميات والتجارب الحية.</span>
+                            <span lang="en">A son of the Kingdom and its African bridge, answering daily-life questions with a cheerful spirit.</span>
                         </p>
                     </div>
                     <button class="w-full mt-5 py-2 bg-saudi-orange/10 text-saudi-orange text-xs font-bold rounded-xl group-hover:bg-saudi-orange group-hover:text-white transition-all duration-300">
-                        <span lang="ar">اسأل السفير</span><span lang="en">Ask Ahmed</span>
+                        <span lang="ar">اسأل السفير</span><span lang="en">Ask Mohammed</span>
                     </button>
                 </div>
 
@@ -921,10 +719,10 @@
                 <div class="bg-saudi-green text-white p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
                     <div class="flex items-center gap-4">
                         <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-white text-3xl">
-                            <i id="chatAmbassadorIcon" class="fa-solid fa-user-tie animate-pulse"></i>
+                            <i id="chatAmbassadorIcon" class="fa-solid fa-house-user animate-pulse"></i>
                         </div>
                         <div class="text-right">
-                            <h4 id="chatAmbassadorName" class="font-bold text-base sm:text-lg">كلير مارتن (سفيرة الأعمال والاستثمار)</h4>
+                            <h4 id="chatAmbassadorName" class="font-bold text-base sm:text-lg">جون (بن لندن) - سفير الحياة اليومية والاندماج</h4>
                             <p id="chatAmbassadorStatus" class="text-[11px] text-saudi-cream font-medium">سفير متصل حالياً مستعد لمشاركتك الإجابات</p>
                         </div>
                     </div>
@@ -954,7 +752,7 @@
                             <div class="flex items-start gap-3 justify-start">
                                 <div class="w-8 h-8 rounded-xl bg-saudi-green text-white flex items-center justify-center text-xs shrink-0"><i class="fa-solid fa-comments"></i></div>
                                 <div class="bg-white p-3.5 rounded-2xl rounded-tr-none shadow-sm border border-gray-100 max-w-[85%] text-xs font-medium text-gray-700 leading-relaxed">
-                                    <p id="chatInitialGreeting">مرحباً بك في منصتنا! أنا كلير مارتن، يسعدني جداً مساعدتك في استكشاف تفاصيل بيئة الأعمال والاستثمار وتأسيس الشركات الناشئة في الرياض. يمكنك اختيار أحد الأسئلة السريعة على الجانب الأيمن أو كتابة سؤالك الشخصي بالأسفل وسأجيبك فوراً بكل صدق ومحبة.</p>
+                                    <p id="chatInitialGreeting">أهلاً بك! أنا جون من لندن، عشت في السعودية سنوات كافية لأتعلم تفاصيل الحياة اليومية بكل بساطة. يسعدني الإجابة عن أي سؤال يخص الاستقرار، التنقل، والاندماج اليومي في المجتمع السعودي.</p>
                                 </div>
                             </div>
 
@@ -979,9 +777,9 @@
     </section>
 
     <!-- قسم رابع: السعودية تتغير والمشاريع الكبرى -->
-    <section id="transformation" class="py-16 md:py-24 bg-saudi-green text-white relative skyline-overlay-banner">
+    <section id="projects" class="py-16 md:py-24 bg-saudi-green text-white relative skyline-overlay-banner">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-            <div class="max-w-3xl mx-auto mb-16">
+            <div class="scroll-reveal max-w-3xl mx-auto mb-16">
                 <span class="text-saudi-cream uppercase tracking-widest text-xs font-black block mb-2" lang="ar">المشاريع الكبرى برؤية 2030</span>
                 <span class="text-saudi-cream uppercase tracking-widest text-xs font-black block mb-2" lang="en">Strategic Giga-Projects under Vision 2030</span>
                 <h2 class="text-3xl sm:text-4xl font-extrabold mb-4 text-white">
@@ -995,107 +793,31 @@
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-right">
-                <!-- مشروع 1: نيوم -->
-                <div class="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/10 hover:border-saudi-cream/40 hover:bg-white/15 transition-all duration-300 flex flex-col justify-between">
-                    <div>
-                        <div class="w-10 h-10 rounded-2xl bg-saudi-cream/10 text-saudi-cream flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-leaf"></i></div>
-                        <h3 class="text-lg font-bold text-white mb-2"><span lang="ar">نيوم | NEOM</span><span lang="en">NEOM</span></h3>
-                        <p class="text-saudi-cream/80 text-[11px] leading-relaxed">
-                            <span lang="ar">مدينة الغد المستقبلية التي تعتمد على الابتكار الكامل، الاستدامة البيئية بنسبة 100%، وتقدم نموذجاً فريداً وجديداً كلياً للحياة والعمل.</span>
-                            <span lang="en">An futuristic sustainable smart-city powered exclusively by renewable energy, pioneering pristine eco-living blueprints.</span>
-                        </p>
-                    </div>
-                    <a href="https://www.neom.com" target="_blank" class="text-xs font-bold text-saudi-cream hover:text-white mt-6 block">neom.com <i class="fa-solid fa-external-link text-[8px] mr-0.5"></i></a>
-                </div>
-
-                <!-- مشروع 2: الدرعية -->
-                <div class="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/10 hover:border-saudi-cream/40 hover:bg-white/15 transition-all duration-300 flex flex-col justify-between">
-                    <div>
-                        <div class="w-10 h-10 rounded-2xl bg-saudi-cream/10 text-saudi-cream flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-landmark"></i></div>
-                        <h3 class="text-lg font-bold text-white mb-2"><span lang="ar">الدرعية | Diriyah</span><span lang="en">Diriyah</span></h3>
-                        <p class="text-saudi-cream/80 text-[11px] leading-relaxed">
-                            <span lang="ar">مهد الدولة السعودية الأولى وبوابتها الحضارية، حيث يلتقي التراث المعماري الأصيل والمسارات الطينية الرائعة بالتطوير العصري.</span>
-                            <span lang="en">The historical cradle and jewel of the Kingdom, seamlessly blending ancient mud-brick architecture with modern culture.</span>
-                        </p>
-                    </div>
-                    <a href="https://www.diriyah.sa" target="_blank" class="text-xs font-bold text-saudi-cream hover:text-white mt-6 block">diriyah.sa <i class="fa-solid fa-external-link text-[8px] mr-0.5"></i></a>
-                </div>
-
-                <!-- مشروع 3: البحر الأحمر -->
-                <div class="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/10 hover:border-saudi-cream/40 hover:bg-white/15 transition-all duration-300 flex flex-col justify-between">
-                    <div>
-                        <div class="w-10 h-10 rounded-2xl bg-saudi-cream/10 text-saudi-cream flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-water"></i></div>
-                        <h3 class="text-lg font-bold text-white mb-2"><span lang="ar">البحر الأحمر | Red Sea</span><span lang="en">The Red Sea</span></h3>
-                        <p class="text-saudi-cream/80 text-[11px] leading-relaxed">
-                            <span lang="ar">وجهة سياحية فاخرة وتجددية بالكامل، تجمع بين روعة جزر البحر الأحمر البكر، الشعاب المرجانية الساحرة، وحماية الطبيعة المحيطة.</span>
-                            <span lang="en">A premium regenerative luxury destination prioritizing protection of pristine islands and pristine marine biosystems.</span>
-                        </p>
-                    </div>
-                    <a href="https://www.redseaglobal.com" target="_blank" class="text-xs font-bold text-saudi-cream hover:text-white mt-6 block">redseaglobal.com <i class="fa-solid fa-external-link text-[8px] mr-0.5"></i></a>
-                </div>
-
-                <!-- مشروع 4: القدية -->
-                <div class="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/10 hover:border-saudi-cream/40 hover:bg-white/15 transition-all duration-300 flex flex-col justify-between">
-                    <div>
-                        <div class="w-10 h-10 rounded-2xl bg-saudi-cream/10 text-saudi-cream flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-masks-theater"></i></div>
-                        <h3 class="text-lg font-bold text-white mb-2"><span lang="ar">القدية | Qiddiya</span><span lang="en">Qiddiya</span></h3>
-                        <p class="text-saudi-cream/80 text-[11px] leading-relaxed">
-                            <span lang="ar">عاصمة الترفيه العالمية، والرياضة المبتكرة، والفنون الإبداعية الكبرى، وواحدة من أضخم ركائز جودة الحياة والسعادة بالمملكة.</span>
-                            <span lang="en">The global capital of entertainment, esports, and immersive arts, uplifting daily standards of happiness.</span>
-                        </p>
-                    </div>
-                    <a href="https://qiddiya.com" target="_blank" class="text-xs font-bold text-saudi-cream hover:text-white mt-6 block">qiddiya.com <i class="fa-solid fa-external-link text-[8px] mr-0.5"></i></a>
-                </div>
-            </div>
+            <div id="dynamicProjectsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-right"></div>
 
         </div>
     </section>
 
-    <!-- قسم خامس: عن المنصة (الرؤية والرسالة والأهداف) -->
-    <section id="about-us" class="py-16 md:py-24 bg-white">
+    <!-- قسم روابط: شعارات الجهات الرسمية مع روابطها المباشرة -->
+    <section id="partner-links" class="py-16 md:py-24 bg-white border-t border-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
-                <!-- الرؤية -->
-                <div class="bg-saudi-light p-8 rounded-3xl border border-gray-100 text-right">
-                    <div class="w-12 h-12 rounded-2xl bg-saudi-green/10 text-saudi-green flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-eye"></i></div>
-                    <h3 class="text-lg font-bold text-saudi-green mb-3"><span lang="ar">رؤية المنصة | Vision</span><span lang="en">Our Vision</span></h3>
-                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed">
-                        <span lang="ar">أن نكون المنصة المرجعية والرقمية الأولى للتجارب الإنسانية التفاعلية الصادقة، لنقل تفاصيل وثراء الثقافة والمعيشة في المملكة العربية السعودية بكل مصداقية ومحبة إلى مختلف شعوب العالم.</span>
-                        <span lang="en">To be the premier global digital destination for authentic human experiences, bridging cultures and reflecting daily life in Saudi Arabia through the eyes of its diverse community.</span>
-                    </p>
-                </div>
-
-                <!-- الرسالة -->
-                <div class="bg-saudi-light p-8 rounded-3xl border border-gray-100 text-right">
-                    <div class="w-12 h-12 rounded-2xl bg-saudi-purple/10 text-saudi-purple flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-paper-plane"></i></div>
-                    <h3 class="text-lg font-bold text-saudi-green mb-3"><span lang="ar">رسالة المنصة | Mission</span><span lang="en">Our Mission</span></h3>
-                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed">
-                        <span lang="ar">بناء وتعميق الفهم والتقارب الثقافي والتعايش السلمي عبر إنتاج وإتاحة محتوى رقمي تفاعلي، وموثوق، ومتعدد اللغات يسلط الضوء على الفرص، والتطور الحضاري، والترابط الأسري والمجتمعي.</span>
-                        <span lang="en">Constructing cross-cultural understanding by producing and curating high-quality, multilingual media that truthfully highlights Saudi Arabia’s societal harmony, opportunities, and transformation.</span>
-                    </p>
-                </div>
-
-                <!-- الأهداف -->
-                <div class="bg-saudi-light p-8 rounded-3xl border border-gray-100 text-right">
-                    <div class="w-12 h-12 rounded-2xl bg-saudi-blue/10 text-saudi-blue flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-bullseye"></i></div>
-                    <h3 class="text-lg font-bold text-saudi-green mb-3"><span lang="ar">أهدافنا الاستراتيجية | Objectives</span><span lang="en">Strategic Goals</span></h3>
-                    <ul class="text-gray-500 text-xs sm:text-sm leading-relaxed space-y-2">
-                        <li><span lang="ar">✓ نقل وتوثيق تجارب إنسانية واقعية وموثوقة.</span><span lang="en">✓ Publish authentic, verified personal narratives.</span></li>
-                        <li><span lang="ar">✓ تعزيز التواصل والحوار الثقافي بين الشعوب.</span><span lang="en">✓ Promote active international cultural exchange.</span></li>
-                        <li><span lang="ar">✓ تسليط الضوء على نهضة المشاريع الوطنية ورؤية 2030.</span><span lang="en">✓ Highlight the massive socio-economic transformation.</span></li>
-                        <li><span lang="ar">✓ تسهيل وصول الزوار والمقيمين للخدمات الرسمية.</span><span lang="en">✓ Seamlessly connect users to official portals.</span></li>
-                    </ul>
-                </div>
-
+            <div class="scroll-reveal text-center max-w-3xl mx-auto mb-16">
+                <span class="text-saudi-orange uppercase tracking-wider text-xs font-black block mb-2" lang="ar">روابط رسمية موثوقة</span>
+                <span class="text-saudi-orange uppercase tracking-wider text-xs font-black block mb-2" lang="en">Trusted Official Links</span>
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-saudi-green mb-4">
+                    <span lang="ar">الجهات الرسمية التي تحتاجها</span>
+                    <span lang="en">The Official Platforms You'll Need</span>
+                </h2>
+                <div class="w-20 h-1 bg-saudi-orange mx-auto mb-6"></div>
             </div>
+
+            <div id="dynamicPartnerLinksContainer" class="grid grid-cols-2 lg:grid-cols-4 gap-6"></div>
         </div>
     </section>
 
     <!-- قسم دعوة تفاعلية لمشاركة القصص والآراء -->
     <section id="feedback-section" class="py-16 bg-saudi-cream/20 border-t border-gray-100">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="scroll-reveal max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h3 class="text-xl sm:text-2xl font-bold text-saudi-green mb-4">
                 <span lang="ar">لكل رحلة صوت... فما هي قصتك؟</span>
                 <span lang="en">Every Journey Has a Voice. What's Yours?</span>
@@ -1110,21 +832,46 @@
         </div>
     </section>
 
+    <!-- قسم تواصل معنا: قنوات التواصل الرسمية للمنصة -->
+    <section id="contact-us" class="py-16 md:py-24 bg-saudi-green text-white">
+        <div class="scroll-reveal max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span class="text-saudi-cream uppercase tracking-widest text-xs font-black block mb-2" lang="ar">نسعد بتواصلك معنا</span>
+            <span class="text-saudi-cream uppercase tracking-widest text-xs font-black block mb-2" lang="en">We'd Love to Hear From You</span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold mb-4 text-white">
+                <span lang="ar">تواصل معنا</span>
+                <span lang="en">Contact Us</span>
+            </h2>
+            <div class="w-20 h-1 bg-saudi-orange mx-auto mb-10"></div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="mailto:thesauditheysee@gmail.com" class="bg-white/10 hover:bg-white/15 backdrop-blur-md rounded-2xl p-5 border border-white/10 hover:border-saudi-cream/40 transition-all duration-300 flex flex-col items-center gap-2">
+                    <i class="fa-solid fa-envelope text-2xl text-saudi-cream"></i>
+                    <span class="text-[11px] font-bold break-all">thesauditheysee@gmail.com</span>
+                </a>
+                <a href="https://www.instagram.com/thesauditheysee/?hl=ar" target="_blank" rel="noopener" class="bg-white/10 hover:bg-white/15 backdrop-blur-md rounded-2xl p-5 border border-white/10 hover:border-saudi-cream/40 transition-all duration-300 flex flex-col items-center gap-2">
+                    <i class="fa-brands fa-instagram text-2xl text-saudi-cream"></i>
+                    <span class="text-[11px] font-bold">Instagram</span>
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=61591762273322" target="_blank" rel="noopener" class="bg-white/10 hover:bg-white/15 backdrop-blur-md rounded-2xl p-5 border border-white/10 hover:border-saudi-cream/40 transition-all duration-300 flex flex-col items-center gap-2">
+                    <i class="fa-brands fa-facebook text-2xl text-saudi-cream"></i>
+                    <span class="text-[11px] font-bold">Facebook</span>
+                </a>
+                <a href="https://www.tiktok.com/@the.saudi.they.se?_r=1&_t=ZS-988T4M20eEm" target="_blank" rel="noopener" class="bg-white/10 hover:bg-white/15 backdrop-blur-md rounded-2xl p-5 border border-white/10 hover:border-saudi-cream/40 transition-all duration-300 flex flex-col items-center gap-2">
+                    <i class="fa-brands fa-tiktok text-2xl text-saudi-cream"></i>
+                    <span class="text-[11px] font-bold">TikTok</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- تذييل الصفحة الفاخر بتصميم الباترن الهوياتي المنسق -->
     <footer class="footer-pattern-bg text-saudi-cream py-12 border-t border-white/5">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12 text-right">
                 
-                <!-- عمود 1: التعريف والشعار -->
+                <!-- عمود 1: التعريف والشعار (الشعار العربي الأبيض فقط، بحسب طلب العميل) -->
                 <div class="space-y-4">
-                    <div>
-                        <div lang="ar" class="inline-block bg-white rounded-2xl p-3">
-                            <img src="ar_logo.png" alt="السعودية بعيونهم" class="h-14 w-auto object-contain">
-                        </div>
-                        <div lang="en" class="inline-block bg-white rounded-2xl p-3">
-                            <img src="Eng_logo.png" alt="The Saudi They See" class="h-14 w-auto object-contain">
-                        </div>
-                    </div>
+                    <img src="assets/logo-white.png" alt="السعودية بعيونهم" class="h-14 w-auto object-contain">
                     <p class="text-[11px] text-saudi-cream/75 leading-relaxed">
                         <span lang="ar">منصة رقمية لتوثيق قصص ومسارات التفاعل الإنساني والثقافي، والتنمية الحضارية والاقتصادية الفائقة في وطننا الثاني، المملكة العربية السعودية.</span>
                         <span lang="en">A premium digital sanctuary detailing lifestyle adaptation, investment, and deep multi-generational cultural bonds in Saudi Arabia.</span>
@@ -1135,10 +882,10 @@
                 <div>
                     <h4 class="font-bold text-white text-xs uppercase tracking-wider mb-4 border-b border-white/10 pb-2"><span lang="ar">أقسام رئيسية</span><span lang="en">Main Menu</span></h4>
                     <ul class="space-y-2 text-[11px] text-saudi-cream/85">
-                        <li><a href="#hero" class="hover:text-saudi-orange transition-colors"><span lang="ar">الرئيسية</span><span lang="en">Home</span></a></li>
-                        <li><a href="#explore" class="hover:text-saudi-orange transition-colors"><span lang="ar">استكشف المعالم</span><span lang="en">Explore Sites</span></a></li>
-                        <li><a href="#media-hub" class="hover:text-saudi-orange transition-colors"><span lang="ar">الوسائط التفاعلية</span><span lang="en">Media Archives</span></a></li>
-                        <li><a href="#digital-guides" class="hover:text-saudi-orange transition-colors"><span lang="ar">أدلة العيش والعمل</span><span lang="en">Expat Manuals</span></a></li>
+                        <li><a href="#explore" class="hover:text-saudi-orange transition-colors"><span lang="ar">استكشفها</span><span lang="en">Explore</span></a></li>
+                        <li><a href="#experiences" class="hover:text-saudi-orange transition-colors"><span lang="ar">التجارب</span><span lang="en">Experiences</span></a></li>
+                        <li><a href="#guides" class="hover:text-saudi-orange transition-colors"><span lang="ar">دليلك</span><span lang="en">Your Guide</span></a></li>
+                        <li><a href="#partner-links" class="hover:text-saudi-orange transition-colors"><span lang="ar">روابط</span><span lang="en">Links</span></a></li>
                     </ul>
                 </div>
 
@@ -1159,10 +906,8 @@
                     <div class="flex flex-wrap gap-1.5">
                         <span class="px-2.5 py-1 rounded bg-white/5 text-[10px] text-saudi-cream font-bold">العربية</span>
                         <span class="px-2.5 py-1 rounded bg-white/5 text-[10px] text-saudi-cream font-bold">English</span>
-                        <span class="px-2.5 py-1 rounded bg-white/5 text-[10px] text-saudi-cream font-bold">Français</span>
-                        <span class="px-2.5 py-1 rounded bg-white/5 text-[10px] text-saudi-cream font-bold">Filipino</span>
-                        <span class="px-2.5 py-1 rounded bg-white/5 text-[10px] text-saudi-cream font-bold">اردو</span>
-                        <span class="px-2.5 py-1 rounded bg-white/5 text-[10px] text-saudi-cream font-bold">हिन्दी</span>
+                        <span class="px-2.5 py-1 rounded bg-white/5 text-[10px] text-saudi-cream/60 font-bold">اردو (قريباً)</span>
+                        <span class="px-2.5 py-1 rounded bg-white/5 text-[10px] text-saudi-cream/60 font-bold">Français (Bientôt)</span>
                     </div>
                 </div>
 
@@ -1171,6 +916,13 @@
             <div class="border-t border-white/10 pt-8 flex flex-col sm:flex-row justify-between items-center text-center gap-4 text-[10px] text-saudi-cream/60">
                 <p>© ٢٠٢٦ منصة السعودية بعيونهم. جميع الحقوق محفوظة لوزارة الشؤون الثقافية والمشاركين.</p>
                 <p>تم التصميم والتطوير تزامناً مع مستهدفات رؤية المملكة ٢٠٣٠ لبناء جسور السلام والحوار الحضاري.</p>
+            </div>
+
+            <!-- إشعار إخلاء المسؤولية المطلوب: توضيح أن المنصة نموذج أولي لأغراض العرض والتقييم الأكاديمي -->
+            <div class="border-t border-white/10 mt-6 pt-6 text-center">
+                <p class="text-[10px] text-saudi-cream/50 leading-relaxed max-w-3xl mx-auto">
+                    هذه المنصة نموذج أولي (Prototype) تم تطويره لأغراض العرض والتقييم الأكاديمي، وجميع المواد والمحتويات المعروضة محفوظة حقوقها لأصحابها وتستخدم لأغراض توضيحية فقط.
+                </p>
             </div>
         </div>
     </footer>
@@ -1260,6 +1012,9 @@
                 <button onclick="switchAdminTab('social')" id="adminTabBtn-social" class="px-4 py-2 text-xs font-bold rounded-xl transition-all duration-300 text-gray-500 hover:text-saudi-green">
                     <i class="fa-solid fa-share-nodes ml-1"></i> منشور اجتماعي
                 </button>
+                <button onclick="switchAdminTab('content')" id="adminTabBtn-content" class="px-4 py-2 text-xs font-bold rounded-xl transition-all duration-300 text-gray-500 hover:text-saudi-green">
+                    <i class="fa-solid fa-layer-group ml-1"></i> دليل / سفير / مشروع / رابط
+                </button>
             </div>
 
             <div class="p-6 max-h-[65vh] overflow-y-auto">
@@ -1296,6 +1051,13 @@
                 <!-- نموذج إضافة فيديو يوتيوب -->
                 <form id="adminVideoForm" onsubmit="handleAdminVideoSubmit(event)" class="hidden space-y-4">
                     <div>
+                        <label class="block text-xs font-bold text-saudi-green mb-1">النوع</label>
+                        <select id="adminVideoMediaType" class="w-full px-4 py-2 text-xs bg-saudi-light border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saudi-green text-right">
+                            <option value="video">فيديو</option>
+                            <option value="podcast">بودكاست</option>
+                        </select>
+                    </div>
+                    <div>
                         <label class="block text-xs font-bold text-saudi-green mb-1">عنوان الفيديو</label>
                         <input id="adminVideoTitle" type="text" required class="w-full px-4 py-2 text-xs bg-saudi-light border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saudi-green text-right">
                     </div>
@@ -1324,6 +1086,41 @@
                     </div>
                     <button type="submit" class="w-full py-3 bg-saudi-orange hover:bg-saudi-green text-white text-xs font-bold rounded-xl shadow-md transition-colors">
                         <i class="fa-solid fa-cloud-arrow-up ml-1"></i> نشر المنشور الآن على قاعدة البيانات
+                    </button>
+                </form>
+
+                <!-- نموذج إضافة محتوى عام: دليل / سفير / مشروع / رابط شريك (يُخزَّن جميعها في جدول content_items المشترك) -->
+                <form id="adminContentForm" onsubmit="handleAdminContentSubmit(event)" class="hidden space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-saudi-green mb-1">نوع المحتوى</label>
+                        <select id="adminContentType" onchange="updateAdminContentFormLabels()" class="w-full px-4 py-2 text-xs bg-saudi-light border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saudi-green text-right">
+                            <option value="guide">دليل (دليلك)</option>
+                            <option value="project">مشروع</option>
+                            <option value="partner_link">رابط شريك</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label id="adminContentTitleLabel" class="block text-xs font-bold text-saudi-green mb-1">عنوان الدليل</label>
+                        <input id="adminContentTitle" type="text" required class="w-full px-4 py-2 text-xs bg-saudi-light border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saudi-green text-right">
+                    </div>
+                    <div id="adminContentIconWrap">
+                        <label class="block text-xs font-bold text-saudi-green mb-1">أيقونة Font Awesome (اختياري)</label>
+                        <input id="adminContentIcon" type="text" placeholder="مثال: fa-solid fa-mug-saucer" class="w-full px-4 py-2 text-xs bg-saudi-light border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saudi-green text-left">
+                    </div>
+                    <div id="adminContentDescWrap">
+                        <label id="adminContentDescLabel" class="block text-xs font-bold text-saudi-green mb-1">الوصف</label>
+                        <textarea id="adminContentDescription" rows="3" class="w-full px-4 py-2 text-xs bg-saudi-light border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saudi-green text-right"></textarea>
+                    </div>
+                    <div>
+                        <label id="adminContentImageLabel" class="block text-xs font-bold text-saudi-green mb-1">رابط صورة الغلاف</label>
+                        <input id="adminContentImage" type="url" placeholder="https://..." class="w-full px-4 py-2 text-xs bg-saudi-light border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saudi-green text-left">
+                    </div>
+                    <div id="adminContentLinkWrap" class="hidden">
+                        <label class="block text-xs font-bold text-saudi-green mb-1">رابط خارجي</label>
+                        <input id="adminContentLink" type="url" placeholder="https://..." class="w-full px-4 py-2 text-xs bg-saudi-light border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saudi-green text-left">
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-saudi-orange hover:bg-saudi-green text-white text-xs font-bold rounded-xl shadow-md transition-colors">
+                        <i class="fa-solid fa-cloud-arrow-up ml-1"></i> نشر المحتوى الآن على قاعدة البيانات
                     </button>
                 </form>
 
@@ -1361,6 +1158,17 @@
         </div>
     </div>
 
+    <!-- 5. مكبّر صورة الدليل (Lightbox): يعرض الإنفوجرافيك كاملاً بحجم قابل للقراءة عند الضغط على بطاقة الدليل -->
+    <div id="guideLightboxModal" onclick="if(event.target === this) closeGuideLightbox()" class="hidden fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4">
+        <div class="relative w-full max-w-2xl max-h-[90vh] flex flex-col items-center">
+            <div class="flex items-center justify-between w-full mb-3">
+                <button onclick="closeGuideLightbox()" class="text-white hover:text-saudi-orange transition-colors bg-white/10 hover:bg-white/20 w-9 h-9 rounded-full flex items-center justify-center"><i class="fa-solid fa-times text-lg"></i></button>
+                <h3 id="guideLightboxTitle" class="text-white text-sm font-bold bg-white/10 px-4 py-2 rounded-full"></h3>
+            </div>
+            <img id="guideLightboxImage" src="" alt="" class="max-w-full max-h-[80vh] rounded-2xl shadow-2xl object-contain">
+        </div>
+    </div>
+
     <!-- نظام الإشعارات والتنبيهات المخصص (Toast System) -->
     <div id="toastNotification" class="hidden fixed bottom-6 left-6 z-50 bg-saudi-green text-white p-4 rounded-2xl shadow-2xl border border-white/10 flex items-center gap-3 transition-transform duration-300 max-w-sm text-right">
         <div id="toastIcon" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-saudi-cream text-sm shrink-0"><i class="fa-solid fa-circle-check"></i></div>
@@ -1373,39 +1181,67 @@
     <!-- كود التحكم التفاعلي الكامل للموقع (Bilingual JavaScript Core) -->
     <script>
         
-        // --- تفعيل نظام التبديل اللغوي المزدوج الفوري مع الحفاظ على اللغة العربية كخيار رئيسي ---
-        function toggleLanguage() {
+        // --- تفعيل نظام التبديل اللغوي المزدوج الفوري (AR/EN) مع الحفاظ على اللغة العربية كخيار رئيسي ---
+        // ملاحظة: مبدّل UR/FR عنصر بصري فقط بهذا العرض الأول، لتوضيح خطة التوسع اللغوي مستقبلاً دون تفعيل فعلي بعد
+        function toggleLanguage(targetLang) {
             const html = document.documentElement;
             const currentLang = html.getAttribute('lang');
-            const arabicElems = document.querySelectorAll('[lang="ar"]');
-            const englishElems = document.querySelectorAll('[lang="en"]');
-            const langBtnText = document.getElementById('langBtnText');
+            const newLang = targetLang || (currentLang === 'ar' ? 'en' : 'ar');
+            if (newLang === currentLang) return;
+
+            // مقيّدة بـ body عمداً: document.querySelectorAll('[lang="ar"]') تُطابق <html lang="ar"> نفسه أيضاً،
+            // مما كان يجعل السطر التالي يضبط display:none على عنصر <html> بأكمله فيُخفي الصفحة كاملةً (bug حقيقي تم اكتشافه وإصلاحه هنا)
+            const arabicElems = document.querySelectorAll('body [lang="ar"]');
+            const englishElems = document.querySelectorAll('body [lang="en"]');
             const searchInput = document.getElementById('searchInput');
 
-            if (currentLang === 'ar') {
+            if (newLang === 'en') {
                 html.setAttribute('lang', 'en');
                 html.setAttribute('dir', 'ltr');
-                langBtnText.innerText = 'العربية';
                 if (searchInput) searchInput.placeholder = 'Search stories, guides...';
-                
+
                 // إظهار نصوص الإنجليزي وإخفاء العربي
                 arabicElems.forEach(el => el.style.display = 'none');
                 englishElems.forEach(el => el.style.display = 'block');
             } else {
                 html.setAttribute('lang', 'ar');
                 html.setAttribute('dir', 'rtl');
-                langBtnText.innerText = 'English';
                 if (searchInput) searchInput.placeholder = 'ابحث في القصص والأدلة...';
 
                 // إظهار نصوص العربي وإخفاء الإنجليزي
                 arabicElems.forEach(el => el.style.display = 'block');
                 englishElems.forEach(el => el.style.display = 'none');
             }
+
+            updateLanguagePillStyles(newLang);
+        }
+
+        function setActiveLanguagePill(lang) {
+            toggleLanguage(lang);
+        }
+
+        function updateLanguagePillStyles(activeLang) {
+            const arPill = document.getElementById('langPill-ar');
+            const enPill = document.getElementById('langPill-en');
+            if (!arPill || !enPill) return;
+            const activeClass = "w-8 h-6 rounded-full text-[10px] font-black transition-all duration-300 bg-saudi-green text-white";
+            const inactiveClass = "w-8 h-6 rounded-full text-[10px] font-black transition-all duration-300 text-saudi-green hover:bg-saudi-green/10";
+            arPill.className = activeLang === 'ar' ? activeClass : inactiveClass;
+            enPill.className = activeLang === 'en' ? activeClass : inactiveClass;
+        }
+
+        // زرا UR/FR: عنصر بصري يوضح للجنة التقييم أن التوسع لأربع لغات مخطط له، دون تفعيل فعلي في هذا العرض الأول
+        function handleComingSoonLanguage(langName) {
+            showCustomToast(
+                "هذه اللغة قادمة قريباً!",
+                `سيتم دعم اللغة "${langName}" بالكامل عند تطوير المنصة رسمياً. هذا العنصر يوضح خطة التوسع اللغوي ضمن النموذج الأولي الحالي.`,
+                true
+            );
         }
 
         // --- التحكم بتبويبات الوسائط المتعددة (Stories, Videos, Podcasts, Infographics) ---
         function switchMediaTab(tabId) {
-            const tabs = ['stories', 'videos', 'podcasts', 'infographics', 'social'];
+            const tabs = ['stories', 'videos', 'podcasts', 'social'];
             
             tabs.forEach(t => {
                 const content = document.getElementById('tabContent-' + t);
@@ -1419,28 +1255,6 @@
                         content.classList.add('hidden');
                         btn.className = "px-5 py-2 text-xs font-bold rounded-xl transition-all duration-300 text-gray-500 hover:text-saudi-green";
                     }
-                }
-            });
-        }
-
-        // --- التحكم بالأكورديون الخاص بدليل "العيش والازدهار" ---
-        function toggleAccordion(id) {
-            const accordions = [1, 2, 3];
-            accordions.forEach(accId => {
-                const content = document.getElementById('accordionContent-' + accId);
-                const icon = document.getElementById('accordionIcon-' + accId);
-                
-                if (accId === id) {
-                    if (content.classList.contains('hidden')) {
-                        content.classList.remove('hidden');
-                        icon.style.transform = 'rotate(180deg)';
-                    } else {
-                        content.classList.add('hidden');
-                        icon.style.transform = 'rotate(0deg)';
-                    }
-                } else {
-                    content.classList.add('hidden');
-                    icon.style.transform = 'rotate(0deg)';
                 }
             });
         }
@@ -1484,6 +1298,15 @@
 
         function openPortalModal() {
             document.getElementById('portalModal').classList.remove('hidden');
+        }
+
+        // زر "سجل الآن" عنصر بصري يوضح فكرة إنشاء الحسابات مستقبلاً، دون وجهة فعلية بعد
+        function handleApplyNowClick() {
+            showCustomToast(
+                "ميزة التسجيل قادمة قريباً!",
+                "سيتم تفعيل إنشاء الحسابات الكاملة عند تطوير المنصة بشكل رسمي. هذا الزر يوضح الفكرة ضمن النموذج الأولي الحالي.",
+                true
+            );
         }
 
         function closePortalModal() {
@@ -1636,108 +1459,108 @@
         // قاعدة بيانات الأسئلة والردود الذكية المحاكاة لكل سفير من السفراء الأربعة
         const ambassadorChatDB = {
             1: {
-                name: "أرجون باتيل (سفير التعليم والبحث العلمي)",
-                icon: "fa-solid fa-user-graduate",
-                initial: "أهلاً بك! أنا أرجون، طالب ماجستير وباحث ذكاء اصطناعي بجامعة 'كاوست' بمدينة ثول. يسعدني جداً الإجابة عن كافة أسئلتك بخصوص الدراسة، الحياة الجامعية المبتكرة، والبحث العلمي في جامعات المملكة الرائدة.",
+                name: "جون (بن لندن) - سفير الحياة اليومية والاندماج",
+                icon: "fa-solid fa-house-user",
+                initial: "أهلاً بك! أنا جون من لندن، عشت في السعودية سنوات كافية لأتعلم تفاصيل الحياة اليومية بكل بساطة. يسعدني الإجابة عن أي سؤال يخص الاستقرار، التنقل، والاندماج اليومي في المجتمع السعودي.",
                 questions: [
                     {
-                        q_ar: "هل تتوفر منح دراسية كاملة وممولة للطلاب الدوليين؟",
-                        q_en: "Are full scholarships available for international students?",
-                        a_ar: "نعم بالتأكيد! تقدم جامعات مثل جامعة الملك عبد الله للعلوم والتقنية (كاوست) وجامعة الملك سعود منحاً دراسية ممولة بالكامل تشمل تكاليف الدراسة، السكن الفخم، تذاكر الطيران السنوية، والرواتب الشهرية. البيئة البحثية وتوفر الإمكانيات هنا تفوق كثيراً بعض جامعات الغرب.",
-                        a_en: "Absolutely! Institutions like KAUST and King Saud University offer fully funded scholarships that cover tuition, housing, annual flights, and monthly stipends."
+                        q_ar: "ما أول شيء يجب أن أعرفه عند الانتقال للعيش في السعودية؟",
+                        q_en: "What's the first thing to know when moving to Saudi Arabia?",
+                        a_ar: "أول شيء يلفت انتباهك هو سهولة إنجاز المعاملات رقمياً عبر تطبيقات مثل أبشر وتوكلنا. بمجرد ضبط هويتك الرقمية، تصبح باقي التفاصيل اليومية (السكن، النقل، الخدمات) سلسة جداً ولا تحتاج وقتاً طويلاً للتأقلم.",
+                        a_en: "The first thing you'll notice is how much runs digitally through apps like Absher and Tawakkalna. Once your digital identity is set up, everything else in daily life falls into place quickly."
                     },
                     {
-                        q_ar: "كيف تقيم بيئة البحث العلمي والتقنية في كاوست؟",
-                        q_en: "How do you rate the research ecosystem at KAUST?",
-                        a_ar: "البيئة التقنية والبحثية هنا مذهلة للغاية وضمن الأحدث عالمياً. نعمل على مشاريع معالجة لغات والذكاء الاصطناعي الفائق بأحدث الأجهزة والمعالجات الرسومية، والتعاون مفتوح وواسع جداً مع باحثين قادمين من أكثر من 80 جنسية مختلفة.",
-                        a_en: "The research infrastructure is world-class. We work on cutting-edge AI and data engineering projects with top-tier international minds."
+                        q_ar: "كيف هي طبيعة التنقل والمواصلات اليومية؟",
+                        q_en: "What's daily transport and commuting like?",
+                        a_ar: "التنقل داخل المدن سهل عبر تطبيقات النقل الذكي، وقطار الحرمين السريع يربط المدن الكبرى بشكل مريح جداً. كإنجليزي اعتدت على وسائل النقل العام، وجدت البنية التحتية هنا حديثة ومتطورة بشكل مفاجئ.",
+                        a_en: "Getting around cities is easy via ride-hailing apps, and the Haramain high-speed rail connects major cities comfortably. As a Londoner used to public transport, I found the infrastructure here surprisingly modern."
                     },
                     {
-                        q_ar: "ما هي نصيحتك لطالب دولي قادم حديثاً للمملكة؟",
-                        q_en: "What is your advice to a new international student?",
-                        a_ar: "نصيحتي الذهبية هي أن تتفاعل خارج الحرم الجامعي! لا تكتفِ بالجلوس في المختبر والمسكن. سافر واكتشف جدة التاريخية وتعرف على جيرانك وزملائك السعوديين؛ فكرمهم ودفئهم واستقبالهم الحار سيشعرك فوراً بأنك في بيتك ووطنك الثاني.",
-                        a_en: "Get out of the laboratory! Travel around, experience Jeddah's Al-Balad, and bond with local Saudis who will instantly make you feel at home."
+                        q_ar: "ما أكثر شيء أدهشك في الاندماج مع المجتمع المحلي؟",
+                        q_en: "What surprised you most about integrating locally?",
+                        a_ar: "مدى ترحيب الجيران والزملاء بك دون مقدمات معقدة. دعوة بسيطة لكوب قهوة تتحول سريعاً لصداقة حقيقية، وهذا شيء لم أعتده بنفس السهولة في لندن.",
+                        a_en: "How quickly neighbors and colleagues welcome you without any complicated formalities. A simple coffee invitation turns into a real friendship faster than I ever experienced back in London."
                     }
                 ]
             },
             2: {
-                name: "ماريا سانتوس (سفيرة القطاع الصحي والاندماج المعيشي)",
-                icon: "fa-solid fa-user-doctor",
-                initial: "مرحباً بك! أنا ماريا، أخصائية تمريض أولى في العناية المركزة للأطفال بمدينة الرياض منذ 8 سنوات. يسعدني أن أشاركك تجربتي بخصوص العيش، الخدمات الصحية الرائعة، وثقافة الاندماج الاجتماعي المريح جدار بجوار في المملكة.",
+                name: "أبو متعب الأمريكي - سفير الثقافة والانتماء",
+                icon: "fa-solid fa-heart",
+                initial: "مرحباً! أنا أبو متعب، أمريكي عشت في السعودية سنوات طويلة، ووقعت في حب ثقافتها وتفاصيلها الإنسانية. اسألني عن أي شيء يخص التعايش، الثقافة، وسر التعلق العميق بهذا البلد.",
                 questions: [
                     {
-                        q_ar: "كيف تعاملتِ مع فروق اللغة العربية والإنجليزية في البداية؟",
-                        q_en: "How did you manage language barriers at the start?",
-                        a_ar: "في البداية كنت قلقة قليلاً، لكنني اكتشفت أن الغالبية العظمى من الزملاء والمرضى وعائلاتهم يتحدثون أو يفهمون الإنجليزية جيداً. تعلمت تدريجياً بعض العبارات الطبية والترحيبية اليومية باللغة العربية مثل 'الحمد لله' و'إن شاء الله'، مما ساهم في ترسيخ جسور الثقة مع العائلات.",
-                        a_en: "Initially, I was nervous, but soon found that most Saudis understand English. Learning basic Arabic phrases went a long way in building deep trust with my patients."
+                        q_ar: "لماذا اخترت البقاء في السعودية لسنوات طويلة؟",
+                        q_en: "Why did you choose to stay in Saudi Arabia for so long?",
+                        a_ar: "الكرم الأصيل والدفء الإنساني هما السبب الحقيقي. كل مرة أفكر في المغادرة، أتذكر عائلات سعودية أصبحت كأهلي الثانية. هذا النوع من الروابط الإنسانية نادر ويصعب تركه.",
+                        a_en: "The genuine generosity and human warmth. Every time I consider leaving, I remember Saudi families who became my second home. That kind of bond is rare and hard to walk away from."
                     },
                     {
-                        q_ar: "هل يشعر المقيمون بالأمان والراحة العائلية في الرياض? ",
-                        q_en: "Do expats feel safe and comfortable in Riyadh?",
-                        a_ar: "الرياض بلا شك هي واحدة من أكثر مدن العالم أماناً وطمأنينة واستقراراً عائلياً. يمكنك المشي ليلاً في المتنزهات العامة أو التسوق بمفردك في أي وقت وبراحة تامة. هناك احترام استثنائي وحفظ كامل للحقوق والخصوصية للجميع.",
-                        a_en: "Riyadh is incredibly safe. You can walk, shop, or exercise at any hour of the night with complete peace of mind."
+                        q_ar: "ما هي أكثر عادة سعودية أثرت فيك شخصياً؟",
+                        q_en: "Which Saudi custom affected you personally the most?",
+                        a_ar: "احترام كبار السن والاهتمام الجماعي بالعائلة. تعلمت منها أن أعيد ترتيب أولوياتي، وأصبحت أقدر الروابط العائلية بشكل مختلف تماماً عما اعتدت عليه في أمريكا.",
+                        a_en: "The deep respect for elders and collective family care. It taught me to reorder my own priorities and value family bonds in a completely different way than I was used to back home."
                     },
                     {
-                        q_ar: "ما هي أفضل الطرق للاندماج وتكوين صداقات مع جيرانك؟",
-                        q_en: "What is the best way to make friends with Saudi neighbors?",
-                        a_ar: "الأمر سهل وبسيط للغاية! تقبل دعوات القهوة والتجمعات المنزلية (المجالس) بقلب مفتوح. السعوديون جبلوا على الكرم وإكرام الضيف، وعندما يلمسون رغبتك الصادقة في التعرف على ثقافتهم، سيغمرونك بفيض من المودة والأطباق التقليدية اللذيذة.",
-                        a_en: "Just say yes to coffee and dinner invitations! Saudis are legendary for their kindness and will treat you like one of their own."
+                        q_ar: "ما نصيحتك لأمريكي يفكر في الانتقال إلى هنا؟",
+                        q_en: "What's your advice for an American considering the move?",
+                        a_ar: "تخلَّ عن الصورة النمطية قبل وصولك. امنح نفسك وقتاً حقيقياً للتعرف على الناس كأفراد، لا كعناوين إخبارية، وستكتشف بلداً مختلفاً تماماً عما كنت تتخيل.",
+                        a_en: "Drop the stereotypes before you land. Give yourself real time to meet people as individuals, not headlines, and you'll discover a country completely different from what you imagined."
                     }
                 ]
             },
             3: {
-                name: "كلير مارتن (سفيرة الأعمال والاستثمار الرقمي)",
-                icon: "fa-solid fa-user-tie",
-                initial: "مرحباً بك في منصتنا! أنا كلير مارتن، يسعدني جداً مساعدتك في استكشاف تفاصيل بيئة الأعمال والاستثمار وتأسيس الشركات الناشئة في الرياض. يمكنك اختيار أحد الأسئلة السريعة على الجانب الأيمن أو كتابة سؤالك الشخصي بالأسفل وسأجيبك فوراً بكل صدق ومحبة.",
+                name: "حسن الصيني - سفير التناغم الثقافي والفرص",
+                icon: "fa-solid fa-handshake",
+                initial: "أهلاً بك! أنا حسن، من الصين، وأعمل بشكل وثيق على بناء جسور التعاون بين الثقافتين الصينية والسعودية. اسألني عن الفرص الاقتصادية والتناغم الثقافي من منظور شرقي.",
                 questions: [
                     {
-                        q_ar: "ما هي الخطوة الأولى لتأسيس شركة ناشئة لأجنبي بالرياض؟",
-                        q_en: "What is the first step to establish a startup for foreigners?",
-                        a_ar: "الخطوة الأولى هي التقديم للحصول على ترخيص استثماري عبر بوابة وزارة الاستثمار (MISA). الإجراءات الآن أصبحت رقمية وسلسة بالكامل ويمكنك إنجازها في غضون أيام معدودة. هناك دعم وتسهيلات هائلة للشركات التقنية والمبتكرة الصديقة للبيئة.",
-                        a_en: "Start by applying for an investment license via the Ministry of Investment (MISA) portal. The process is completely digitized and extremely fast."
+                        q_ar: "كيف تصف التقارب الثقافي بين الصين والسعودية؟",
+                        q_en: "How would you describe the cultural closeness between China and Saudi Arabia?",
+                        a_ar: "هناك تشابه كبير في قيمة احترام العائلة وكبار السن وأهمية العلاقات الشخصية طويلة الأمد في الأعمال. هذا التشابه يجعل الاندماج الثقافي هنا أسرع وأكثر طبيعية بكثير مما توقعت.",
+                        a_en: "There's real overlap in valuing family, respecting elders, and prioritizing long-term relationships in business. That similarity makes cultural integration here faster and more natural than I expected."
                     },
                     {
-                        q_ar: "كيف تصفين بيئة الأعمال والاستثمار في ظل رؤية 2030؟",
-                        q_en: "How do you describe the business climate under Vision 2030?",
-                        a_ar: "بيئة استثنائية ومليئة بالفرص الذهبية والحركة والطاقة الإبداعية المستمرة. كل رائد أعمال لديه طموح حقيقي سيجد هنا مساحة واسعة للابتكار والشراكة مع جهات وصناديق تدعم التطوير والتقنيات العصرية العابرة للقارات.",
-                        a_en: "It is an energetic and dynamic hub. Anyone with real ambition can easily find mentors, partners, and funding support."
+                        q_ar: "ما هي أبرز الفرص الاقتصادية الواعدة التي تراها هنا؟",
+                        q_en: "What are the most promising economic opportunities you see here?",
+                        a_ar: "قطاعات التقنية والبنية التحتية والطاقة المتجددة تشهد نمواً هائلاً مرتبطاً برؤية 2030، وهناك شراكات متنامية بين الشركات الصينية والسعودية في هذه المجالات تحديداً.",
+                        a_en: "Technology, infrastructure, and renewable energy are growing rapidly under Vision 2030, with expanding partnerships between Chinese and Saudi companies specifically in these sectors."
                     },
                     {
-                        q_ar: "لماذا اخترتِ السكن في أحياء الدرعية التاريخية؟",
-                        q_en: "Why did you choose to live in historic Diriyah?",
-                        a_ar: "أعشق التاريخ والتراث المعماري الفريد! السكن في الدرعية وبجوار حي الطريف الأثري يمنحني إلهاماً إبداعياً يومياً رائعاً. التمشّي بين الجدران الطينية والمسارات الطبيعية الهادئة بالوادي يربطني بروح الأرض وتاريخها العريق.",
-                        a_en: "I love heritage! Living near Diriyah's At-Turaif mud-brick ruins gives me constant creative inspiration for my design work."
+                        q_ar: "ما النصيحة التي تقدمها لمستثمر آسيوي جديد في السوق السعودي؟",
+                        q_en: "What advice do you give a new Asian investor entering the Saudi market?",
+                        a_ar: "استثمر الوقت في بناء علاقة شخصية حقيقية قبل توقيع أي اتفاقية. الثقة هنا تُبنى وجهاً لوجه، وهذا مبدأ نتشاركه نحن الاثنين ثقافياً ويسهّل الأعمال كثيراً.",
+                        a_en: "Invest time in building a genuine personal relationship before signing anything. Trust is built face-to-face here, a principle we share culturally, and it makes doing business much smoother."
                     }
                 ]
             },
             4: {
-                name: "أحمد خان (سفير التطوير الإنشائي والحياة العائلية)",
-                icon: "fa-solid fa-helmet-safety",
-                initial: "أهلاً ومرحباً بك! أنا المهندس أحمد خان، مستقر بالمنطقة الشرقية منذ 10 سنوات. كمهندس إنشائي وأب لأسرة، يسعدني جداً تقديم إرشادات حقيقية وعملية بخصوص بيئة العمل في البناء والتشييد وتفاصيل السكن والمدارس وحياة الأطفال في المملكة.",
+                name: "محمد فلود - سفير المجتمع والحياة اليومية",
+                icon: "fa-solid fa-earth-africa",
+                initial: "أهلاً ومرحباً! أنا محمد فلود، من أصل تشادي وُلدت وترعرعت في السعودية. أعتبر نفسي جسراً بين إفريقيا والمملكة، ويسعدني مشاركتك تفاصيل الحياة اليومية والتجارب الحقيقية بروح مرحة.",
                 questions: [
                     {
-                        q_ar: "كيف هي جودة السكن والمجمعات العائلية (Compounds) بالشرقية؟",
-                        q_en: "How is the housing quality and Compounds in Eastern Province?",
-                        a_ar: "جودة السكن ممتازة وتنافسية للغاية. المجمعات السكنية (Compounds) في الخبر والظهران توفر خدمات متكاملة ترفيهية وأمنية، ومدارس دولية ممتازة للأطفال، مما يجعلها الخيار المفضل والآمن للكثير من العائلات المقيمة.",
-                        a_en: "Outstanding! Residential compounds in Al-Khobar and Dhahran offer exceptional amenities, playgrounds, and top-tier safety for expat families."
+                        q_ar: "كيف تصف تجربتك كشخص وُلد ونشأ في السعودية؟",
+                        q_en: "What's it like being born and raised in Saudi Arabia?",
+                        a_ar: "شعور فريد حقاً! ترعرعت بين ثقافتين متجاورتين، الإفريقية والسعودية، وهذا أعطاني منظوراً غنياً لفهم كيف يتعايش الناس من خلفيات مختلفة هنا بشكل طبيعي وسلس يومياً.",
+                        a_en: "A truly unique feeling. I grew up between two neighboring cultures, African and Saudi, which gave me a rich perspective on how people from different backgrounds coexist naturally here every day."
                     },
                     {
-                        q_ar: "ما هي أهم مشاريع التنمية الحضرية الجاري العمل عليها؟",
-                        q_en: "What are the key urban development projects currently under construction?",
-                        a_ar: "الشرقية تشهد نمواً هائلاً؛ نطور مجمعات سكنية ذكية تعتمد البناء المستدام، وتطوير البنية التحتية للطرق والواجهات البحرية والحدائق العامة الكبرى، مما يرفع من جودة الحياة للزوار والمواطنين على حد سواء.",
-                        a_en: "We are building sustainable smart housing systems, modernized roads, and beautiful beachfront parks that uplift daily quality of life."
+                        q_ar: "ما هي أكثر لحظة تشعر فيها بالانتماء الحقيقي؟",
+                        q_en: "When do you feel the strongest sense of belonging?",
+                        a_ar: "في التجمعات العائلية والمناسبات الوطنية، حيث يشارك الجميع بغض النظر عن أصولهم. هذا الشمول اليومي البسيط هو ما يجعلني أشعر بأن هذا وطني الحقيقي بلا أي تردد.",
+                        a_en: "During family gatherings and national celebrations, where everyone joins in regardless of background. That simple, everyday inclusiveness is what makes this feel like home without a doubt."
                     },
                     {
-                        q_ar: "هل يتوفر لأطفال المقيمين رعاية طبية وتعليمية بمستوى جيد؟",
-                        q_en: "Do expat children have access to good healthcare and education?",
-                        a_ar: "بكل تأكيد. تمتلك المملكة منظومة رعاية صحية متطورة للغاية ومستشفيات حاصلة على أعلى الاعتمادات العالمية. كما تتوفر مدارس عالمية تقدم المناهج البريطانية والأمريكية والباكستانية وغيرها بجودة أكاديمية متميز.",
-                        a_en: "Absolutely. Healthcare facilities are world-class, and international schools offer globally recognized curricula with excellent quality."
+                        q_ar: "ما نصيحتك لأي شخص أفريقي يفكر بالانتقال أو الزيارة؟",
+                        q_en: "What's your advice for someone from Africa considering visiting or moving here?",
+                        a_ar: "تعال بقلب مفتوح وستجد كرماً حقيقياً بانتظارك. اقترب من الناس، شارك قصتك، واسمح لنفسك بالاندماج في التفاصيل اليومية الصغيرة، فهي أفضل طريقة لفهم روح هذا المجتمع.",
+                        a_en: "Come with an open heart and you'll find genuine warmth waiting for you. Get close to people, share your story, and let yourself sink into the small daily details — that's the best way to understand this community's spirit."
                     }
                 ]
             }
         };
 
-        let currentActiveAmbassadorId = 3; // كلير مارتن هي الافتراضية حالياً
+        let currentActiveAmbassadorId = 1; // جون هو الافتراضي حالياً
 
         function selectAmbassador(id) {
             currentActiveAmbassadorId = id;
@@ -1895,7 +1718,8 @@
         const LOCAL_CACHE_KEYS = {
             stories: 'saudiEyes_stories_cache',
             videos: 'saudiEyes_videos_cache',
-            social: 'saudiEyes_social_cache'
+            social: 'saudiEyes_social_cache',
+            content_items: 'saudiEyes_content_items_cache'
         };
 
         function saveLocalCache(kind, data) {
@@ -1953,7 +1777,7 @@
         }
 
         function switchAdminTab(tab) {
-            const tabs = { story: 'adminStoryForm', video: 'adminVideoForm', social: 'adminSocialForm' };
+            const tabs = { story: 'adminStoryForm', video: 'adminVideoForm', social: 'adminSocialForm', content: 'adminContentForm' };
             Object.keys(tabs).forEach(t => {
                 const form = document.getElementById(tabs[t]);
                 const btn = document.getElementById('adminTabBtn-' + t);
@@ -1966,6 +1790,7 @@
                     btn.className = "px-4 py-2 text-xs font-bold rounded-xl transition-all duration-300 text-gray-500 hover:text-saudi-green";
                 }
             });
+            if (tab === 'content') updateAdminContentFormLabels();
         }
 
         function setSubmitBusy(btn, busy, busyLabel) {
@@ -2028,18 +1853,102 @@
             document.getElementById('storyViewerModal').classList.remove('hidden');
         }
 
-        // --- بطاقات الفيديو الديناميكية (تضمين حقيقي عبر iframe يوتيوب) ---
+        // --- بطاقات "دليلك": أيقونة + عنوان + وصف (بدلاً من تصغير صورة الإنفوجرافيك)، يفتح المكبّر عند الضغط ---
+        const dynamicGuidesMap = {};
+
+        function renderGuideCard(row) {
+            dynamicGuidesMap[row.id] = row;
+            const icon = row.icon || 'fa-solid fa-book-open';
+            return `
+                <div onclick="openGuideLightbox('${row.id}')" class="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 text-right cursor-pointer group flex flex-col">
+                    <div class="h-48 bg-saudi-cream/20 flex items-center justify-center p-6 border-b border-gray-50">
+                        <div class="text-center">
+                            <div class="w-14 h-14 mx-auto rounded-2xl bg-saudi-orange/10 flex items-center justify-center text-saudi-orange text-2xl mb-3 group-hover:scale-110 transition-transform">
+                                <i class="${escapeHtml(icon)}"></i>
+                            </div>
+                            <h4 class="font-bold text-saudi-green text-xs">${escapeHtml(row.title)}</h4>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <p class="text-xs text-gray-500 leading-relaxed mb-4 line-clamp-3 flex-1">${escapeHtml(row.description)}</p>
+                        <span class="text-[11px] font-bold text-saudi-orange flex items-center gap-1.5">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <span lang="ar">اضغط للتكبير</span><span lang="en">Tap to enlarge</span>
+                        </span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function prependGuideCard(row) {
+            const container = document.getElementById('dynamicGuidesContainer');
+            if (container) container.insertAdjacentHTML('afterbegin', renderGuideCard(row));
+            const emptyState = document.getElementById('guidesEmptyState');
+            if (emptyState) emptyState.classList.add('hidden');
+        }
+
+        function openGuideLightbox(id) {
+            const row = dynamicGuidesMap[id];
+            if (!row) return;
+            document.getElementById('guideLightboxTitle').innerText = row.title;
+            document.getElementById('guideLightboxImage').src = row.image_url;
+            document.getElementById('guideLightboxImage').alt = row.title;
+            document.getElementById('guideLightboxModal').classList.remove('hidden');
+        }
+
+        function closeGuideLightbox() {
+            document.getElementById('guideLightboxModal').classList.add('hidden');
+        }
+
+        // --- بطاقات "روابط": شعار الجهة فقط مع رابطها الرسمي المباشر ---
+        function renderPartnerLinkCard(row) {
+            const img = row.image_url || 'https://placehold.co/300x300/FBF9F7/034733?text=' + encodeURIComponent(row.title || 'Link');
+            const url = row.link_url || '#';
+            return `
+                <a href="${escapeHtml(url)}" target="_blank" rel="noopener" class="bg-saudi-light hover:bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col items-center justify-center gap-3 text-center group">
+                    <img src="${escapeHtml(img)}" alt="${escapeHtml(row.title)}" class="h-14 w-auto object-contain group-hover:scale-105 transition-transform">
+                    <span class="text-xs font-bold text-saudi-green">${escapeHtml(row.title)}</span>
+                </a>
+            `;
+        }
+
+        // --- بطاقات "المشاريع": صورة حقيقية + عنوان + وصف + رابط رسمي خارجي ---
+        function renderProjectCard(row) {
+            const img = row.image_url || 'https://placehold.co/600x400/034733/f5e6d3?text=' + encodeURIComponent(row.title || 'Project');
+            const linkBtn = row.link_url
+                ? `<a href="${escapeHtml(row.link_url)}" target="_blank" rel="noopener" class="text-xs font-bold text-saudi-cream hover:text-white mt-4 flex items-center gap-1">${escapeHtml(row.link_url.replace(/^https?:\/\//, ''))} <i class="fa-solid fa-external-link text-[8px]"></i></a>`
+                : '';
+            return `
+                <div class="bg-white/10 backdrop-blur-md rounded-3xl overflow-hidden border border-white/10 hover:border-saudi-cream/40 hover:bg-white/15 transition-all duration-300 flex flex-col">
+                    <div class="h-36 relative overflow-hidden">
+                        <img src="${escapeHtml(img)}" alt="${escapeHtml(row.title)}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-saudi-green/80 to-transparent"></div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <h3 class="text-lg font-bold text-white mb-2">${escapeHtml(row.title)}</h3>
+                        <p class="text-saudi-cream/80 text-[11px] leading-relaxed flex-1">${escapeHtml(row.description)}</p>
+                        ${linkBtn}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- بطاقات الفيديو والبودكاست الديناميكية (تضمين حقيقي عبر iframe يوتيوب)، يُميَّز بينها بحقل media_type ---
         const dynamicVideosMap = {};
 
         function renderDynamicVideoCard(row) {
             dynamicVideosMap[row.id] = row;
+            const isPodcast = row.media_type === 'podcast';
+            const label = isPodcast
+                ? 'بودكاست مضاف من المنصة | Community Podcast'
+                : 'فيديو مضاف من المنصة | Community Upload';
             return `
                 <div class="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all text-right">
                     <div class="aspect-video bg-black relative">
                         <iframe class="w-full h-full" src="${escapeHtml(row.embed_url)}" title="${escapeHtml(row.title)}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
                     </div>
                     <div class="p-6">
-                        <span class="text-[10px] text-saudi-orange font-bold uppercase tracking-wider block mb-1">فيديو مضاف من المنصة | Community Upload</span>
+                        <span class="text-[10px] text-saudi-orange font-bold uppercase tracking-wider block mb-1">${label}</span>
                         <h3 class="font-bold text-saudi-green text-base mb-2">${escapeHtml(row.title)}</h3>
                     </div>
                 </div>
@@ -2047,7 +1956,8 @@
         }
 
         function prependVideo(row) {
-            const container = document.getElementById('dynamicVideosContainer');
+            const containerId = row.media_type === 'podcast' ? 'dynamicPodcastsContainer' : 'dynamicVideosContainer';
+            const container = document.getElementById(containerId);
             if (container) container.insertAdjacentHTML('afterbegin', renderDynamicVideoCard(row));
         }
 
@@ -2198,7 +2108,8 @@
             const row = {
                 title: document.getElementById('adminVideoTitle').value.trim(),
                 youtube_url: rawUrl,
-                embed_url: embed
+                embed_url: embed,
+                media_type: document.getElementById('adminVideoMediaType').value
             };
 
             try {
@@ -2247,6 +2158,86 @@
             }
         }
 
+        // --- تبديل تسميات نموذج "إضافة محتوى عام" حسب النوع المختار (دليل/مشروع/رابط شريك) ---
+        function updateAdminContentFormLabels() {
+            const type = document.getElementById('adminContentType').value;
+            const titleLabel = document.getElementById('adminContentTitleLabel');
+            const iconWrap = document.getElementById('adminContentIconWrap');
+            const descWrap = document.getElementById('adminContentDescWrap');
+            const descLabel = document.getElementById('adminContentDescLabel');
+            const imageLabel = document.getElementById('adminContentImageLabel');
+            const linkWrap = document.getElementById('adminContentLinkWrap');
+            const linkInput = document.getElementById('adminContentLink');
+
+            if (type === 'guide') {
+                titleLabel.innerText = 'عنوان الدليل';
+                iconWrap.classList.remove('hidden');
+                descWrap.classList.remove('hidden');
+                descLabel.innerText = 'الوصف المختصر (يظهر على البطاقة)';
+                imageLabel.innerText = 'رابط صورة الدليل الكاملة (تُعرض كبيرة عند الضغط على البطاقة)';
+                linkWrap.classList.add('hidden');
+                linkInput.required = false;
+            } else if (type === 'project') {
+                titleLabel.innerText = 'اسم المشروع';
+                iconWrap.classList.add('hidden');
+                descWrap.classList.remove('hidden');
+                descLabel.innerText = 'وصف المشروع';
+                imageLabel.innerText = 'رابط صورة المشروع';
+                linkWrap.classList.remove('hidden');
+                linkInput.required = false;
+            } else if (type === 'partner_link') {
+                titleLabel.innerText = 'اسم الجهة';
+                iconWrap.classList.add('hidden');
+                descWrap.classList.add('hidden');
+                imageLabel.innerText = 'رابط شعار الجهة';
+                linkWrap.classList.remove('hidden');
+                linkInput.required = true;
+            }
+        }
+
+        async function handleAdminContentSubmit(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type=submit]');
+            setSubmitBusy(btn, true, 'جاري النشر...');
+
+            const type = document.getElementById('adminContentType').value;
+            const row = {
+                type: type,
+                title: document.getElementById('adminContentTitle').value.trim(),
+                description: document.getElementById('adminContentDescription').value.trim() || null,
+                image_url: document.getElementById('adminContentImage').value.trim() || null,
+                link_url: document.getElementById('adminContentLink').value.trim() || null,
+                icon: type === 'guide' ? (document.getElementById('adminContentIcon').value.trim() || null) : null
+            };
+
+            const containerByType = { guide: 'dynamicGuidesContainer', project: 'dynamicProjectsContainer', partner_link: 'dynamicPartnerLinksContainer' };
+            const renderByType = { guide: renderGuideCard, project: renderProjectCard, partner_link: renderPartnerLinkCard };
+
+            try {
+                const { data, error } = await sb.from('content_items').insert(row).select().single();
+                if (error) throw error;
+                allContentItems.unshift(data);
+                const container = document.getElementById(containerByType[type]);
+                if (container) container.insertAdjacentHTML('afterbegin', renderByType[type](data));
+                if (type === 'guide') document.getElementById('guidesEmptyState')?.classList.add('hidden');
+                cacheAndStore('content_items', data);
+                showCustomToast("تم النشر بنجاح!", "تمت إضافة المحتوى مباشرة لقاعدة البيانات السحابية وسيظهر لكل زوار المنصة فوراً.", true);
+                e.target.reset();
+                updateAdminContentFormLabels();
+            } catch (err) {
+                console.error('Supabase insert (content_items) failed:', err);
+                const offlineRow = Object.assign({}, row, { id: 'local-' + Date.now(), created_at: new Date().toISOString() });
+                allContentItems.unshift(offlineRow);
+                const container = document.getElementById(containerByType[type]);
+                if (container) container.insertAdjacentHTML('afterbegin', renderByType[type](offlineRow));
+                if (type === 'guide') document.getElementById('guidesEmptyState')?.classList.add('hidden');
+                cacheAndStore('content_items', offlineRow);
+                showCustomToast("تم الحفظ محلياً", "تعذر الاتصال بقاعدة البيانات السحابية، تم حفظ المحتوى مؤقتاً على هذا الجهاز وستتم مزامنته لاحقاً.", false);
+            } finally {
+                setSubmitBusy(btn, false);
+            }
+        }
+
         // --- الجلب الحي الأولي (SELECT) من Supabase عند تحميل الصفحة، مع نسخة احتياطية محلية عند تعذر الاتصال ---
         async function loadAndRenderCollection(table, containerId, renderFn, cacheKey) {
             let rows = [];
@@ -2266,7 +2257,21 @@
 
         async function fetchInitialContent() {
             await loadAndRenderCollection('stories', 'dynamicStoriesContainer', renderDynamicStoryCard, 'stories');
-            await loadAndRenderCollection('videos', 'dynamicVideosContainer', renderDynamicVideoCard, 'videos');
+
+            let videoRows = [];
+            try {
+                const { data, error } = await sb.from('videos').select('*').order('created_at', { ascending: false });
+                if (error) throw error;
+                videoRows = data || [];
+                saveLocalCache('videos', videoRows);
+            } catch (err) {
+                console.warn('تعذر جلب الفيديوهات والبودكاست من Supabase، سيتم عرض النسخة المحلية المخزّنة.', err);
+                videoRows = loadLocalCache('videos');
+            }
+            const videosContainer = document.getElementById('dynamicVideosContainer');
+            const podcastsContainer = document.getElementById('dynamicPodcastsContainer');
+            if (videosContainer) videosContainer.innerHTML = videoRows.filter(r => r.media_type !== 'podcast').map(renderDynamicVideoCard).join('');
+            if (podcastsContainer) podcastsContainer.innerHTML = videoRows.filter(r => r.media_type === 'podcast').map(renderDynamicVideoCard).join('');
 
             try {
                 const { data, error } = await sb.from('social_posts').select('*').order('created_at', { ascending: false });
@@ -2278,11 +2283,42 @@
                 allSocialPosts = loadLocalCache('social');
             }
             renderSocialPosts();
+
+            await fetchContentItems();
+        }
+
+        // --- جلب محتوى content_items (الأدلة/السفراء/المشاريع/الروابط) وتوزيعه حسب النوع على أقسامه ---
+        let allContentItems = [];
+
+        async function fetchContentItems() {
+            try {
+                const { data, error } = await sb.from('content_items').select('*').order('created_at', { ascending: false });
+                if (error) throw error;
+                allContentItems = data || [];
+                saveLocalCache('content_items', allContentItems);
+            } catch (err) {
+                console.warn('تعذر جلب المحتوى (الأدلة/السفراء/المشاريع/الروابط) من Supabase، سيتم عرض النسخة المحلية المخزّنة.', err);
+                allContentItems = loadLocalCache('content_items');
+            }
+
+            const guideRows = allContentItems.filter(r => r.type === 'guide');
+            const guidesContainer = document.getElementById('dynamicGuidesContainer');
+            const guidesEmptyState = document.getElementById('guidesEmptyState');
+            if (guidesContainer) guidesContainer.innerHTML = guideRows.map(renderGuideCard).join('');
+            if (guidesEmptyState) guidesEmptyState.classList.toggle('hidden', guideRows.length > 0);
+
+            const projectRows = allContentItems.filter(r => r.type === 'project');
+            const projectsContainer = document.getElementById('dynamicProjectsContainer');
+            if (projectsContainer) projectsContainer.innerHTML = projectRows.map(renderProjectCard).join('');
+
+            const partnerLinkRows = allContentItems.filter(r => r.type === 'partner_link');
+            const partnerLinksContainer = document.getElementById('dynamicPartnerLinksContainer');
+            if (partnerLinksContainer) partnerLinksContainer.innerHTML = partnerLinkRows.map(renderPartnerLinkCard).join('');
         }
 
         // تفعيل أول سفير، جلب المحتوى الحي، وتحميل مكتبات تويتر/انستغرام الرسمية عند تحميل الصفحة
         window.onload = function() {
-            selectAmbassador(3); // كلير مارتن كخيار أول
+            selectAmbassador(1); // جون كخيار أول
             fetchInitialContent();
 
             loadExternalScriptOnce('https://platform.twitter.com/widgets.js', (ok) => {
@@ -2293,7 +2329,31 @@
                 instagramSdkAvailable = ok && !!window.instgrm;
                 renderSocialPosts();
             });
+
+            initScrollReveal();
         };
+
+        // --- تفعيل حركة الظهور التدريجي لعناوين الأقسام عند التمرير (يُحترم فيها تفضيل تقليل الحركة بالنظام) ---
+        function initScrollReveal() {
+            const revealEls = document.querySelectorAll('.scroll-reveal');
+            if (!revealEls.length) return;
+
+            if (!window.matchMedia('(prefers-reduced-motion: no-preference)').matches || !('IntersectionObserver' in window)) {
+                revealEls.forEach(el => el.classList.add('is-visible'));
+                return;
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            revealEls.forEach(el => observer.observe(el));
+        }
 
     </script>
 </body>
