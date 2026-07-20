@@ -30,7 +30,7 @@
     </script>
     
     <!-- تحميل خطوط Google Fonts وتنسيقات الأيقونات Font Awesome -->
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=El+Messiri:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=El+Messiri:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- تكامل مكتبة Supabase الرسمية لقاعدة البيانات السحابية الحية (لوحة التحكم والمحتوى الديناميكي) -->
@@ -122,6 +122,47 @@
             from { transform: scale(1) translate(0, 0); }
             to { transform: scale(1.12) translate(-1.5%, -1.5%); }
         }
+        /* الستارة السينمائية الداكنة فوق خلفية الواجهة الرئيسية لضمان وضوح النص بأسلوب فاخر (Qomra-style) */
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(10,10,10,0.95));
+        }
+        /* خط زخرفي رفيع أسفل عناوين رؤيتنا/رسالتنا/أهدافنا كلمسة تحريرية فاخرة */
+        .title-accent::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background-color: rgba(255, 255, 255, 0.3);
+            margin-top: 10px;
+        }
+        /* نقشة هندسية خفية جداً (Watermark) تمنح لوحات الرؤية/الرسالة/الأهداف عمقاً فاخراً بدل السطح المسطح */
+        .texture-panel {
+            position: relative;
+            overflow: hidden;
+        }
+        .texture-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.9) 0, rgba(255,255,255,0.9) 1px, transparent 1px, transparent 26px);
+            opacity: 0.04;
+            pointer-events: none;
+        }
+        .texture-panel > * {
+            position: relative;
+            z-index: 1;
+        }
+        /* أيقونة نقطية مخصصة بلون ذهبي غير لامع لقائمة الأهداف الاستراتيجية */
+        .goal-bullet {
+            width: 18px;
+            height: 18px;
+            color: #E6A15C;
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
     </style>
 </head>
 <body class="bg-saudi-light text-gray-800 font-sans antialiased overflow-x-hidden">
@@ -210,24 +251,24 @@
     </header>
 
     <!-- قسم الواجهة والترحيب الرئيسي (Hero Section): خلفية بصرية متحركة (Ken Burns) بديلة لفيديو الخلفية المطلوب -->
-    <section id="hero" class="py-20 md:py-32 relative overflow-hidden">
+    <section id="hero" class="py-24 md:py-40 relative overflow-hidden bg-[#0A0A0A]">
         <div class="absolute inset-0 z-0">
             <img src="assets/hero/hero-1.jpg" alt="" aria-hidden="true" class="hero-slide hero-media-pan absolute inset-0 w-full h-full object-cover transition-opacity duration-[1500ms] opacity-100">
             <img src="assets/hero/hero-2.jpg" alt="" aria-hidden="true" class="hero-slide hero-media-pan absolute inset-0 w-full h-full object-cover transition-opacity duration-[1500ms] opacity-0">
         </div>
-        <div class="absolute inset-0 bg-gradient-to-b from-saudi-light/95 via-saudi-light/90 to-saudi-cream/75 z-[1]"></div>
+        <div class="hero-overlay"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-            <span class="inline-block bg-saudi-orange/10 text-saudi-orange text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full mb-4 animate-bounce">
+            <span class="inline-block bg-white/10 text-saudi-cream text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full mb-6 border border-white/10 backdrop-blur-sm">
                 <span lang="ar">صوت حقيقي من مجتمعنا الإنساني العالمي</span>
                 <span lang="en">Real Voices from our Global Community</span>
             </span>
-            
-            <h1 class="text-4xl sm:text-5xl md:text-6xl font-black text-saudi-green leading-tight mb-6 max-w-4xl mx-auto">
+
+            <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold text-white leading-[1.15] mb-6 max-w-4xl mx-auto">
                 <span lang="ar" class="block">السعودية... كما يرويها من عاشها</span>
                 <span lang="en" class="block">Saudi Arabia... As Told by Those Who Call It Home</span>
             </h1>
 
-            <p class="text-gray-600 text-sm sm:text-base md:text-lg max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
+            <p class="text-white/70 text-sm sm:text-base md:text-lg max-w-3xl mx-auto leading-relaxed mb-10 font-medium">
                 <span lang="ar">منصة إعلامية رقمية فريدة ومتعددة اللغات، تنقل تفاصيل الحياة اليومية والفرص والتحولات الإيجابية في المملكة العربية السعودية بعيون المقيمين والزوار. ندعوك لاستكشاف قصص حقيقية، تجارب ملهمة، ومقاطع مرئية وصوتية تبني جسوراً متينة من التفاهم الإنساني والثقافي.</span>
                 <span lang="en">A premium, multilingual digital media platform capturing the rich tapestry of life in the Kingdom. Experience true stories, immersive videos, and podcasts curated by international residents and visitors. Witness cultural exchange, shared human connections, and the breathtaking transformation of Saudi Arabia.</span>
             </p>
@@ -267,44 +308,44 @@
             </div>
         </div>
 
-        <!-- شبكة غير متماثلة (Asymmetric Split) بامتداد كامل خارج حاوية max-w-7xl، بحيث تلامس ألوانها حواف الشاشة مباشرة دون هامش بيج حولها -->
-        <div class="scroll-reveal grid grid-cols-1 lg:grid-cols-5" dir="ltr">
+        <!-- شبكة غير متماثلة (Asymmetric Split 38%/62%) بامتداد كامل خارج حاوية max-w-7xl، بحيث تلامس ألوانها حواف الشاشة مباشرة دون هامش بيج حولها، وبتفاصيل فاخرة (خطوط زخرفية، نقشة خفية) بأسلوب Qomra -->
+        <div class="scroll-reveal grid grid-cols-1 lg:grid-cols-[38%_62%]" dir="ltr">
 
             <!-- اللوحة اليسرى: الأهداف الاستراتيجية (أخضر) -->
-            <div class="order-2 lg:order-1 lg:col-span-2 bg-saudi-green text-white p-8 sm:p-10 lg:p-12 flex flex-col justify-center" dir="rtl">
-                <h3 class="text-xl sm:text-2xl font-black mb-5 text-white"><span lang="ar">أهدافنا الاستراتيجية</span><span lang="en">Strategic Goals</span></h3>
+            <div class="texture-panel order-2 lg:order-1 bg-saudi-green text-white flex flex-col justify-center" style="padding: 5% 6%;" dir="rtl">
+                <h3 class="title-accent text-xl sm:text-2xl font-black mb-5 text-white"><span lang="ar">أهدافنا الاستراتيجية</span><span lang="en">Strategic Goals</span></h3>
                 <ul class="text-white/90 text-sm">
-                    <li class="flex items-start gap-3 py-3 border-b border-white/10 leading-[1.8]">
-                        <i class="fa-solid fa-check text-amber-300 mt-1 shrink-0"></i>
+                    <li class="flex items-start gap-3 pb-4 mb-4 border-b border-white/[0.08] leading-[1.8]">
+                        <svg class="goal-bullet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg>
                         <span><span lang="ar">نقل وتوثيق تجارب إنسانية واقعية وموثوقة.</span><span lang="en">Publish authentic, verified personal narratives.</span></span>
                     </li>
-                    <li class="flex items-start gap-3 py-3 border-b border-white/10 leading-[1.8]">
-                        <i class="fa-solid fa-check text-amber-300 mt-1 shrink-0"></i>
+                    <li class="flex items-start gap-3 pb-4 mb-4 border-b border-white/[0.08] leading-[1.8]">
+                        <svg class="goal-bullet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg>
                         <span><span lang="ar">تعزيز التواصل والحوار الثقافي بين الشعوب.</span><span lang="en">Promote active international cultural exchange.</span></span>
                     </li>
-                    <li class="flex items-start gap-3 py-3 border-b border-white/10 leading-[1.8]">
-                        <i class="fa-solid fa-check text-amber-300 mt-1 shrink-0"></i>
+                    <li class="flex items-start gap-3 pb-4 mb-4 border-b border-white/[0.08] leading-[1.8]">
+                        <svg class="goal-bullet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg>
                         <span><span lang="ar">تسليط الضوء على نهضة المشاريع الوطنية ورؤية 2030.</span><span lang="en">Highlight the massive socio-economic transformation.</span></span>
                     </li>
-                    <li class="flex items-start gap-3 py-3 leading-[1.8]">
-                        <i class="fa-solid fa-check text-amber-300 mt-1 shrink-0"></i>
+                    <li class="flex items-start gap-3 leading-[1.8]">
+                        <svg class="goal-bullet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg>
                         <span><span lang="ar">تسهيل وصول الزوار والمقيمين للخدمات الرسمية.</span><span lang="en">Seamlessly connect users to official portals.</span></span>
                     </li>
                 </ul>
             </div>
 
             <!-- اللوحة اليمنى: الرؤية (برتقالي) أعلى + الرسالة (بنفسجي) أسفل -->
-            <div class="order-1 lg:order-2 lg:col-span-3 grid grid-rows-2" dir="rtl">
-                <div class="bg-saudi-orange text-white p-8 sm:p-10 lg:p-12 flex flex-col justify-center">
-                    <h3 class="text-xl sm:text-2xl font-black mb-4 text-white"><span lang="ar">رؤيتنا</span><span lang="en">Our Vision</span></h3>
-                    <p class="text-white/95 text-sm leading-[1.8]">
+            <div class="order-1 lg:order-2 grid grid-rows-2" dir="rtl">
+                <div class="texture-panel bg-saudi-orange flex flex-col justify-center" style="padding: 5% 6%;">
+                    <h3 class="title-accent text-xl sm:text-2xl font-black mb-4" style="color:#FDFBF7;"><span lang="ar">رؤيتنا</span><span lang="en">Our Vision</span></h3>
+                    <p class="text-sm leading-[1.8]" style="color:#FDFBF7;">
                         <span lang="ar">أن تكون المنصة الإعلامية الرقمية الرائدة في توثيق التجارب الإنسانية للمقيمين والزوار، وتعزيز التواصل الثقافي، وإبراز الصورة الواقعية للمملكة.</span>
                         <span lang="en">To be the premier global digital destination for authentic human experiences, bridging cultures and reflecting daily life in Saudi Arabia through the eyes of its diverse community.</span>
                     </p>
                 </div>
-                <div class="bg-saudi-purple text-white p-8 sm:p-10 lg:p-12 flex flex-col justify-center">
-                    <h3 class="text-xl sm:text-2xl font-black mb-4 text-white"><span lang="ar">رسالتنا</span><span lang="en">Our Mission</span></h3>
-                    <p class="text-white/95 text-sm leading-[1.8]">
+                <div class="texture-panel bg-saudi-purple text-white flex flex-col justify-center" style="padding: 5% 6%;">
+                    <h3 class="title-accent text-xl sm:text-2xl font-black mb-4 text-white"><span lang="ar">رسالتنا</span><span lang="en">Our Mission</span></h3>
+                    <p class="text-white text-sm leading-[1.8]">
                         <span lang="ar">تمكين المقيمين والزوار من نقل تجاربهم الواقعية في المملكة عبر منصة إعلامية مهنية متعددة اللغات، تعزز التواصل الثقافي، وتبرز الصورة الواقعية للمملكة من خلال محتوى موثوق يعكس تنوع المجتمع السعودي.</span>
                         <span lang="en">Constructing cross-cultural understanding by producing and curating high-quality, multilingual media that truthfully highlights Saudi Arabia’s societal harmony, opportunities, and transformation.</span>
                     </p>
