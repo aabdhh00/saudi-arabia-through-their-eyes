@@ -1161,6 +1161,58 @@
         </div>
     </div>
 
+    <!-- المساعد الذكي (Chatbot): زر عائم + لوحة اختيار الفئة والمحادثة -->
+    <button onclick="toggleAssistantWidget()" class="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-saudi-green hover:bg-saudi-orange text-white shadow-2xl flex items-center justify-center text-xl transition-all duration-300 hover:scale-110">
+        <i id="assistantToggleIcon" class="fa-solid fa-robot"></i>
+    </button>
+
+    <div id="assistantWidget" class="hidden fixed bottom-24 right-6 z-40 w-[calc(100vw-3rem)] sm:w-96 h-[520px] max-h-[70vh] bg-white rounded-3xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden">
+        <div class="bg-saudi-green text-white p-4 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-robot"></i>
+                <h4 class="font-bold text-sm">
+                    <span lang="ar">المساعد الذكي</span><span lang="en">Smart Assistant</span>
+                </h4>
+            </div>
+            <button onclick="toggleAssistantWidget()" class="w-7 h-7 rounded-full hover:bg-white/10 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- شاشة اختيار فئة المستخدم -->
+        <div id="assistantPersonaSelect" class="flex-1 p-5 flex flex-col justify-center gap-3 overflow-y-auto">
+            <p class="text-xs font-bold text-gray-500 text-center mb-2">
+                <span lang="ar">قبل أن نبدأ، أخبرنا من أنت لنقدّم لك محتوى ومصادر مناسبة</span>
+                <span lang="en">Before we start, tell us who you are so we can tailor the content</span>
+            </p>
+            <button onclick="selectAssistantPersona('resident')" class="w-full py-3 px-4 bg-saudi-blue/10 hover:bg-saudi-blue hover:text-white text-saudi-blue rounded-2xl font-bold text-sm flex items-center gap-3 transition-all duration-300">
+                <i class="fa-solid fa-house-user w-5"></i><span lang="ar">مقيم</span><span lang="en">Resident</span>
+            </button>
+            <button onclick="selectAssistantPersona('visitor')" class="w-full py-3 px-4 bg-saudi-orange/10 hover:bg-saudi-orange hover:text-white text-saudi-orange rounded-2xl font-bold text-sm flex items-center gap-3 transition-all duration-300">
+                <i class="fa-solid fa-suitcase-rolling w-5"></i><span lang="ar">زائر</span><span lang="en">Visitor</span>
+            </button>
+            <button onclick="selectAssistantPersona('student')" class="w-full py-3 px-4 bg-saudi-purple/10 hover:bg-saudi-purple hover:text-white text-saudi-purple rounded-2xl font-bold text-sm flex items-center gap-3 transition-all duration-300">
+                <i class="fa-solid fa-graduation-cap w-5"></i><span lang="ar">طالب</span><span lang="en">Student</span>
+            </button>
+            <button onclick="selectAssistantPersona('investor')" class="w-full py-3 px-4 bg-saudi-green/10 hover:bg-saudi-green hover:text-white text-saudi-green rounded-2xl font-bold text-sm flex items-center gap-3 transition-all duration-300">
+                <i class="fa-solid fa-briefcase w-5"></i><span lang="ar">مستثمر</span><span lang="en">Investor</span>
+            </button>
+        </div>
+
+        <!-- شاشة المحادثة -->
+        <div id="assistantChatView" class="hidden flex-1 flex-col overflow-hidden">
+            <div class="px-4 py-2 border-b border-gray-100 flex items-center justify-between shrink-0">
+                <span id="assistantActivePersonaLabel" class="text-[11px] font-bold text-saudi-green"></span>
+                <button onclick="resetAssistantPersona()" class="text-[11px] font-bold text-gray-400 hover:text-saudi-orange">
+                    <span lang="ar">تغيير الفئة</span><span lang="en">Change</span>
+                </button>
+            </div>
+            <div id="assistantMessages" class="flex-1 p-4 overflow-y-auto space-y-3 text-right"></div>
+            <form onsubmit="handleAssistantSend(event)" class="p-3 border-t border-gray-100 flex gap-2 shrink-0">
+                <input id="assistantInputText" type="text" placeholder="اكتب سؤالك هنا..." required class="flex-1 px-3 py-2.5 text-xs bg-saudi-light border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-saudi-green/50 text-right font-medium">
+                <button type="submit" class="w-10 h-10 shrink-0 bg-saudi-green hover:bg-saudi-orange text-white rounded-xl flex items-center justify-center"><i class="fa-solid fa-paper-plane text-xs"></i></button>
+            </form>
+        </div>
+    </div>
+
     <!-- نظام الإشعارات والتنبيهات المخصص (Toast System) -->
     <div id="toastNotification" class="hidden fixed bottom-6 left-6 z-50 bg-saudi-green text-white p-4 rounded-2xl shadow-2xl border border-white/10 flex items-center gap-3 transition-transform duration-300 max-w-sm text-right">
         <div id="toastIcon" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-saudi-cream text-sm shrink-0"><i class="fa-solid fa-circle-check"></i></div>
@@ -1650,6 +1702,117 @@
                 </div>
             `;
             chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // --- المساعد الذكي (Chatbot): محادثة حقيقية عبر Claude، مخصّصة حسب فئة المستخدم ---
+        const ASSISTANT_PERSONA_LABELS = {
+            resident: { ar: 'مقيم', en: 'Resident' },
+            visitor: { ar: 'زائر', en: 'Visitor' },
+            student: { ar: 'طالب', en: 'Student' },
+            investor: { ar: 'مستثمر', en: 'Investor' }
+        };
+        const ASSISTANT_WELCOME = {
+            resident: 'أهلاً بك! أنا هنا لمساعدتك في كل ما يخص الإقامة، الخدمات الحكومية، والحياة اليومية في السعودية. تفضل بسؤالك.',
+            visitor: 'أهلاً بك! اسألني عن أفضل الوجهات السياحية، التجارب الثقافية، والفعاليات في السعودية.',
+            student: 'أهلاً بك! يسعدني مساعدتك بمعلومات عامة عن الدراسة والحياة الطلابية في السعودية.',
+            investor: 'أهلاً بك! اسألني عن فرص الاستثمار، تأسيس الأعمال، والمشاريع الكبرى في السعودية.'
+        };
+
+        let assistantPersona = null;
+        let assistantHistory = [];
+
+        function toggleAssistantWidget() {
+            document.getElementById('assistantWidget').classList.toggle('hidden');
+        }
+
+        function selectAssistantPersona(persona) {
+            assistantPersona = persona;
+            assistantHistory = [];
+
+            document.getElementById('assistantPersonaSelect').classList.add('hidden');
+            const chatView = document.getElementById('assistantChatView');
+            chatView.classList.remove('hidden');
+            chatView.classList.add('flex');
+
+            const label = ASSISTANT_PERSONA_LABELS[persona];
+            document.getElementById('assistantActivePersonaLabel').innerText =
+                (document.documentElement.getAttribute('lang') === 'en' ? label.en : label.ar);
+
+            document.getElementById('assistantMessages').innerHTML = '';
+            appendAssistantMessage(ASSISTANT_WELCOME[persona], 'assistant');
+        }
+
+        function resetAssistantPersona() {
+            assistantPersona = null;
+            assistantHistory = [];
+            document.getElementById('assistantChatView').classList.add('hidden');
+            document.getElementById('assistantChatView').classList.remove('flex');
+            document.getElementById('assistantPersonaSelect').classList.remove('hidden');
+        }
+
+        function appendAssistantMessage(text, role) {
+            const box = document.getElementById('assistantMessages');
+            const isUser = role === 'user';
+            box.innerHTML += `
+                <div class="flex items-start gap-2.5 ${isUser ? 'justify-end' : 'justify-start'}">
+                    ${!isUser ? '<div class="w-7 h-7 rounded-lg bg-saudi-green text-white flex items-center justify-center text-[10px] shrink-0"><i class="fa-solid fa-robot"></i></div>' : ''}
+                    <div class="${isUser ? 'bg-saudi-green text-white rounded-tl-none' : 'bg-saudi-light text-gray-700 rounded-tr-none border border-gray-100'} p-3 rounded-2xl max-w-[80%] text-xs font-medium leading-relaxed">${escapeHtml(text)}</div>
+                </div>
+            `;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function showAssistantTyping() {
+            const box = document.getElementById('assistantMessages');
+            const id = 'assistantTyping-' + Date.now();
+            box.innerHTML += `
+                <div id="${id}" class="flex items-start gap-2.5 justify-start">
+                    <div class="w-7 h-7 rounded-lg bg-saudi-green text-white flex items-center justify-center text-[10px] shrink-0"><i class="fa-solid fa-robot animate-pulse"></i></div>
+                    <div class="bg-saudi-light border border-gray-100 px-3 py-2 rounded-2xl rounded-tr-none text-[10px] text-gray-400 font-bold">...يكتب الآن</div>
+                </div>
+            `;
+            box.scrollTop = box.scrollHeight;
+            return id;
+        }
+
+        async function handleAssistantSend(e) {
+            e.preventDefault();
+            if (!assistantPersona) return;
+            const input = document.getElementById('assistantInputText');
+            const question = input.value.trim();
+            if (!question) return;
+
+            appendAssistantMessage(question, 'user');
+            input.value = '';
+
+            const typingId = showAssistantTyping();
+
+            try {
+                const res = await fetch(`${SUPABASE_URL}/functions/v1/chat-assistant`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+                    },
+                    body: JSON.stringify({
+                        persona: assistantPersona,
+                        message: question,
+                        history: assistantHistory
+                    })
+                });
+                const data = await res.json();
+                document.getElementById(typingId)?.remove();
+
+                if (!res.ok || !data.reply) throw new Error(data.error || 'assistant_error');
+
+                appendAssistantMessage(data.reply, 'assistant');
+                assistantHistory.push({ role: 'user', content: question });
+                assistantHistory.push({ role: 'assistant', content: data.reply });
+            } catch (err) {
+                document.getElementById(typingId)?.remove();
+                console.error('Assistant error:', err);
+                appendAssistantMessage('عذراً، تعذر الوصول للمساعد الذكي حالياً. يرجى المحاولة مرة أخرى لاحقاً.', 'assistant');
+            }
         }
 
         // محاكاة كتابة السفير (مؤشر يكتب الآن)
