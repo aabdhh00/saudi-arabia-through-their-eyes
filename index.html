@@ -1803,12 +1803,7 @@
                 const data = await res.json();
                 document.getElementById(typingId)?.remove();
 
-                if (!res.ok || !data.reply) {
-                    // DEBUG مؤقت: عرض تفاصيل الخطأ الفعلية داخل المحادثة للتشخيص، سيُزال لاحقاً
-                    const debugText = `[DEBUG] error=${data.error} status=${data.debug_status} key_present=${data.debug_key_present} key_prefix=${data.debug_key_prefix} detail=${data.debug_detail}`;
-                    appendAssistantMessage(debugText, 'assistant');
-                    return;
-                }
+                if (!res.ok || !data.reply) throw new Error(data.error || 'assistant_error');
 
                 appendAssistantMessage(data.reply, 'assistant');
                 assistantHistory.push({ role: 'user', content: question });
