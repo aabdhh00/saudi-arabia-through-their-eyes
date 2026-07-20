@@ -209,7 +209,10 @@
 
     <!-- قسم الواجهة والترحيب الرئيسي (Hero Section): خلفية بصرية متحركة (Ken Burns) بديلة لفيديو الخلفية المطلوب -->
     <section id="hero" class="py-20 md:py-32 relative overflow-hidden">
-        <img src="assets/experiences/alula.jpeg" alt="" aria-hidden="true" class="hero-media-pan absolute inset-0 w-full h-full object-cover z-0">
+        <div class="absolute inset-0 z-0">
+            <img src="assets/hero/hero-1.jpg" alt="" aria-hidden="true" class="hero-slide hero-media-pan absolute inset-0 w-full h-full object-cover transition-opacity duration-[1500ms] opacity-100">
+            <img src="assets/hero/hero-2.jpg" alt="" aria-hidden="true" class="hero-slide hero-media-pan absolute inset-0 w-full h-full object-cover transition-opacity duration-[1500ms] opacity-0">
+        </div>
         <div class="absolute inset-0 bg-gradient-to-b from-saudi-light/95 via-saudi-light/90 to-saudi-cream/75 z-[1]"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
             <span class="inline-block bg-saudi-orange/10 text-saudi-orange text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full mb-4 animate-bounce">
@@ -2311,7 +2314,24 @@
             });
 
             initScrollReveal();
+            initHeroSlideshow();
         };
+
+        // --- تبديل صور خلفية الواجهة الرئيسية تلقائياً مع تأثير تلاشي متبادل (Crossfade) ---
+        function initHeroSlideshow() {
+            const slides = document.querySelectorAll('#hero .hero-slide');
+            if (slides.length < 2) return;
+
+            let activeIndex = 0;
+            setInterval(() => {
+                const nextIndex = (activeIndex + 1) % slides.length;
+                slides[activeIndex].classList.remove('opacity-100');
+                slides[activeIndex].classList.add('opacity-0');
+                slides[nextIndex].classList.remove('opacity-0');
+                slides[nextIndex].classList.add('opacity-100');
+                activeIndex = nextIndex;
+            }, 6000);
+        }
 
         // --- تفعيل حركة الظهور التدريجي لعناوين الأقسام عند التمرير (يُحترم فيها تفضيل تقليل الحركة بالنظام) ---
         function initScrollReveal() {
